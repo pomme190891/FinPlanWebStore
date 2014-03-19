@@ -8,10 +8,13 @@
     <meta name="author" content="">
     <link rel="shortcut icon" href="~/Content/Image/favicon.png" type="image/x-icon">
 
-    <title>Bluecoat E-Store Sign-In Page</title>
+    <title>@ViewBag.Title</title>
 
     <!-- Bootstrap core CSS -->
     @Styles.Render("~/Content/bootstrapcss")
+
+
+    @RenderSection("css", false)
 
     <!-- Add custom CSS here -->
     <style>
