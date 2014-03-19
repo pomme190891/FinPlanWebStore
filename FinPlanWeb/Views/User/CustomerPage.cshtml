@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = "CustomerPage";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+
+
+@section Logout{
+ 
+     @if (Request.IsAuthenticated)
+     {
+         //<li><strong>@Html.Encode(User.Identity.Name)</strong></li>
+         
+         <li><a href="@Url.Action("LogOut", "User")" class="btn btn-inverse btn-large">Logout<i class="glyphicon glyphicon-log-out"></i></a></li>
+         // @Html.ActionLink("Log Out", "Logout", "User", new { @class = "btn btn-inverse" })
+ 
+ 
+    }
+    else
+     {
+ 
+     }
+}
+
+<h2>CustomerPage</h2>
+ 

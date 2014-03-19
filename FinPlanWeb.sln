@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinPlanWeb", "FinPlanWeb\FinPlanWeb.csproj", "{5A465AB1-F6FE-46A8-93F4-2D2E2D93856B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helpers", "ClassLibrary1\Helpers.csproj", "{D3B4B2E0-1EEE-4A23-87B7-D28095C2336C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5A465AB1-F6FE-46A8-93F4-2D2E2D93856B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A465AB1-F6FE-46A8-93F4-2D2E2D93856B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A465AB1-F6FE-46A8-93F4-2D2E2D93856B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A465AB1-F6FE-46A8-93F4-2D2E2D93856B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3B4B2E0-1EEE-4A23-87B7-D28095C2336C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3B4B2E0-1EEE-4A23-87B7-D28095C2336C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3B4B2E0-1EEE-4A23-87B7-D28095C2336C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3B4B2E0-1EEE-4A23-87B7-D28095C2336C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
