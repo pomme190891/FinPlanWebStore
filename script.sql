@@ -1,0 +1,35 @@
+USE [master]
+
+IF EXISTS(SELECT * FROM sys.syslogins
+     WHERE name = N'db_access_user')
+     DROP LOGIN db_access_user
+GO
+
+CREATE LOGIN db_access_user WITH PASSWORD = 'Depth81guard' ; 
+GO
+ALTER LOGIN db_access_user WITH DEFAULT_DATABASE = finplanweb
+GO
+
+USE finplanweb
+GO
+IF  EXISTS (SELECT * FROM sys.database_principals WHERE name = N'db_access_user')
+DROP USER [db_access_user]
+GO
+CREATE USER db_access_user FROM LOGIN db_access_user
+EXEC sp_addrolemember 'db_datareader', db_access_user
+GO
+EXEC sp_addrolemember 'db_datawriter', db_access_user
+GO
+
+USE finplanweb
+GO
+IF  EXISTS (SELECT * FROM sys.database_principals WHERE name = N'db_access_admin')
+DROP USER [db_access_admin]
+GO
+CREATE USER db_access_admin FROM LOGIN db_access_admin
+EXEC sp_addrolemember 'db_datareader', db_access_admin
+GO
+EXEC sp_addrolemember 'db_datawriter', db_access_admin
+GO
+EXEC sp_addrolemember 'db_owner', db_access_admin
+GO
