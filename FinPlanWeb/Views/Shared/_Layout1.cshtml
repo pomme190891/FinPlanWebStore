@@ -33,10 +33,41 @@
             background-image: -o-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
             background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
         }
+
+
+
+        .productbox {
+            background-color: #ffffff;
+            padding: 10px;
+         margin-left: 23px;
+            margin-bottom: 20px;
+            -webkit-box-shadow: 0 8px 6px -6px #999;
+            -moz-box-shadow: 0 8px 6px -6px #999;
+            box-shadow: 0 8px 6px -6px #999;
+        }
+
+        .producttitle {
+            font-weight: bold;
+            padding: 5px 0 5px 0;
+            height: 50px;
+        }
+
+        .productprice {
+            border-top: 1px solid #dadada;
+            padding-top: 5px;
+        }
+
+        .pricetext {
+            font-weight: bold;
+            font-size: 1.4em;
+        }
     </style>
+    
     <script src="@Url.Content("~/Scripts/jquery-1.8.2.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/knockout-2.2.0.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/knockout.mapping.js")" type="text/javascript"></script>
 </head>
 
 <body>
@@ -79,11 +110,11 @@
 
         <div class="row">
             <div class="col-md-12">
-                @RenderBody();
-                        @if (IsSectionDefined("Javascript"))
-                        {
-                            @RenderSection("Javascript");
-                        }
+                @RenderBody()
+                @if (IsSectionDefined("Javascript"))
+                {
+                    @RenderSection("Javascript")
+                }
 
 
             </div>
