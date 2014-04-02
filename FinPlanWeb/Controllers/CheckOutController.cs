@@ -6,20 +6,16 @@ using System.Web.Mvc;
 
 namespace FinPlanWeb.Controllers
 {
-    public class HomeController : BaseController
+    public class CheckOutController : BaseController
     {
         //
-        // GET: /Home/
+        // GET: /CheckOut/
 
         public ActionResult Index()
         {
             return View();
         }
-
-        public ActionResult About()
-        {
-            return View();
-        }
-
     }
+
+
 }

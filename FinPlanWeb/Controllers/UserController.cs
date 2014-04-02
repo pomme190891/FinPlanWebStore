@@ -1,23 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Security;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Xml;
-using System.Xml.Linq;
-using WebMatrix.WebData;
 using FinPlanWeb.Database;
+using FinPlanWeb.DTOs;
 using FinPlanWeb.Models;
-
-
 
 
 namespace FinPlanWeb.Controllers
 {
-    public class UserController : Controller
+    public class UserController : BaseController
     {
         //
         // GET: /User/
@@ -56,22 +46,17 @@ namespace FinPlanWeb.Controllers
             {
                 if (UserManagement.isValid(user.Username, user.Password))
                 {
-                    if (UserManagement.isAdmin(user.Username, user.Password))
+                    if (UserManagement.IsAdmin(user.Username, user.Password))
                     {
                         FormsAuthentication.SetAuthCookie(user.Username, user.RememberMe);
+                        Session["User"] = new UserLoginDTO { Username = user.Username };
                         return RedirectToAction("AdminPage", "User");
                     }
-                    else
-                    {
-                        FormsAuthentication.SetAuthCookie(user.Username, user.RememberMe);
-                        return RedirectToAction("CustomerPage", "User");
-                    }
-
+                    FormsAuthentication.SetAuthCookie(user.Username, user.RememberMe);
+                    Session["User"] = new UserLoginDTO { Username = user.Username };
+                    return RedirectToAction("CustomerPage", "User");
                 }
-                else
-                {
-                    ModelState.AddModelError("General", "Password is incorrect!");
-                }
+                ModelState.AddModelError("General", "Password is incorrect!");
             }
             return View(user);
         }

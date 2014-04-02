@@ -14,15 +14,18 @@ namespace FinPlanWeb.Database
         public int Id { get; set; }
         public string Name { get; set; }
         public string Code { get; set; }
-        public string Price { get; set; }
+        public double Price { get; set; }
         public DateTime AddedDate { get; set; }
         public DateTime? ModifiedDate { get; set; }
-        //public string Catergory { get; set; }
+        public string PriceInStr
+        {
+            get { return string.Format("{0:0.00}", Price); }
+        }
     }
 
     public class ProductManagement
     {
-        public static string getConnection()
+        public static string GetConnection()
         {
             return System.Configuration.ConfigurationManager.ConnectionStrings["standard"].ConnectionString;
         }
@@ -35,14 +38,63 @@ namespace FinPlanWeb.Database
             ITSupport
         }
 
+
+        public static Product GetProduct(string productCode)
+        {
+
+            using (var connection = new SqlConnection(GetConnection()))
+            {
+
+                var _sql = @"SELECT * FROM [dbo].[products] where productCode = @c ";
+                var cmd = new SqlCommand(_sql, connection);
+
+                cmd.Parameters
+
+                          .Add(new SqlParameter("@c", SqlDbType.NVarChar))
+                          .Value = productCode;
+
+                connection.Open();
+                var reader = cmd.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    reader.Read();
+                    return new Product
+                     {
+                         Id = reader.GetInt32(0),
+                         Code = reader.GetString(1),
+                         Name = reader.GetString(2),
+                         AddedDate = reader.GetDateTime(3),
+                         ModifiedDate = reader.IsDBNull(4) ? null : (DateTime?)reader.GetDateTime(4),
+                         Price = reader.GetSqlMoney(5).ToDouble()
+                     };
+                }
+                reader.Dispose();
+                cmd.Dispose();
+                return null;
+            }
+
+
+
+
+
+        }
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+
         public static IEnumerable<Product> GetProducts(ProductType type)
         {
-            ///Establishing a connection db
+
             var products = new List<Product>();
-            using (var connection = new SqlConnection(getConnection()))
+            using (var connection = new SqlConnection(GetConnection()))
             {
-                
-                var  _sql = @"SELECT * FROM [dbo].[products]";
+
+                var _sql = @"SELECT * FROM [dbo].[products]";
                 if (type != ProductType.All)
                 {
                     _sql += " WHERE categoriesID = @t";
@@ -52,11 +104,11 @@ namespace FinPlanWeb.Database
                 connection.Open();
                 if (type != ProductType.All)
                 {
-                         cmd.Parameters
-                          .Add(new SqlParameter("@t", SqlDbType.Int))
-                          .Value = (int)type;
+                    cmd.Parameters
+                     .Add(new SqlParameter("@t", SqlDbType.Int))
+                     .Value = (int)type;
                 }
-               
+
 
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -68,8 +120,8 @@ namespace FinPlanWeb.Database
                             Code = reader.GetString(1),
                             Name = reader.GetString(2),
                             AddedDate = reader.GetDateTime(3),
-                            ModifiedDate = reader.IsDBNull(4) ? null: (DateTime?)reader.GetDateTime(4) ,
-                            Price = Convert.ToDecimal(String.Format("{0:0.00}", reader.GetSqlMoney(5).ToDecimal())).ToString()
+                            ModifiedDate = reader.IsDBNull(4) ? null : (DateTime?)reader.GetDateTime(4),
+                            Price = reader.GetSqlMoney(5).ToDouble()
 
                         };
 

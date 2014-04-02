@@ -12,15 +12,38 @@ namespace FinPlanWeb.Database
     public class UserManagement
     {
 
+        public class User
+        {
+            public int Id { get; set; }
+            public string UserName { get; set; }
+            public string FirstName { get; set; }
+            public string SurName { get; set; }
+            public string FirmName { get; set; }
+            public string Password { get; set; }
+            public DateTime AddedDate { get; set; }
+            public string Email { get; set; }
+            public bool IsAdmin { get; set; }
+            public DateTime? LastLogin { get; set; }
+            public string IPLog { get; set; }
+            public DateTime? ModifiedDate { get; set; }
+        }
+
+
+
+
 
         /// This part checks if the user with password is existing within the database 
         /// Taking the input of email address and password
         /// return if the data is existed or not
-        public static string getConnection()
+        public static string GetConnection()
         {
             return System.Configuration.ConfigurationManager.ConnectionStrings["standard"].ConnectionString;
         }
 
+        /// <summary>
+        /// Getting the IP address on the user's change for tracking purposes.
+        /// </summary>
+        /// <returns></returns>
         private static string GetIP()
         {
             string strHostName = "";
@@ -30,25 +53,30 @@ namespace FinPlanWeb.Database
 
             string ipaddress = Convert.ToString(ipEntry.AddressList[2]);
 
-            return ipaddress.ToString();
+            return ipaddress;
         }
 
 
-
+        /// <summary>
+        /// Check whether the user exists...
+        /// </summary>
+        /// <param name="_username"></param>
+        /// <param name="_password"></param>
+        /// <returns></returns>
         public static bool isValid(string _username, string _password)
         {
             ///Establishing a connection db
 
-            using (var connection = new SqlConnection(getConnection()))
+            using (var connection = new SqlConnection(GetConnection()))
             {
-                string _sql = @"SELECT [Username] FROM [dbo].[users] WHERE [Username] = @u AND [Password] = @p";
-                string _sql2 = @"UPDATE Users SET LastLogin = GETDATE() WHERE [Username] = @u AND [Password] =@p";
-                string _sql3 = @"UPDATE [dbo].[users] SET iplog = @ip WHERE [Username] = @u AND [Password] =@p";
+                string sql = @"SELECT [Username] FROM [dbo].[users] WHERE [Username] = @u AND [Password] = @p";
+                string sql2 = @"UPDATE Users SET LastLogin = GETDATE() WHERE [Username] = @u AND [Password] =@p";
+                string sql3 = @"UPDATE [dbo].[users] SET iplog = @ip WHERE [Username] = @u AND [Password] =@p";
 
 
-                var cmd = new SqlCommand(_sql, connection);
-                var cmd2 = new SqlCommand(_sql2, connection);
-                var cmd3 = new SqlCommand(_sql3, connection);
+                var cmd = new SqlCommand(sql, connection);
+                var cmd2 = new SqlCommand(sql2, connection);
+                var cmd3 = new SqlCommand(sql3, connection);
 
                 connection.Open();
                 cmd.Parameters
@@ -83,64 +111,104 @@ namespace FinPlanWeb.Database
                     cmd3.ExecuteNonQuery();
                     return true;
                 }
-                else
-                {
-                    reader.Dispose();
-                    cmd.Dispose();
-                    return false;
-                }
-
+                reader.Dispose();
+                cmd.Dispose();
+                return false;
             }
         }
+
+
         /// <summary>
         /// Check that the user is an admin or not
         /// </summary>
-        /// <param name="_username"></param>
-        /// <param name="_password"></param>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
         /// <returns></returns>
         /// 
-
-        public static bool isAdmin(string _username, string _password)
+        public static bool IsAdmin(string username, string password)
         {
-            using (var connection = new SqlConnection(getConnection()))
+            using (var connection = new SqlConnection(GetConnection()))
             {
-                string _sql = @"SELECT [isAdmin] FROM [dbo].[users] WHERE [Username] = @u AND [Password] = @p";
-                var cmd = new SqlCommand(_sql, connection);
+                string sql = @"SELECT [isAdmin] FROM [dbo].[users] WHERE [Username] = @u AND [Password] = @p";
+                var cmd = new SqlCommand(sql, connection);
 
                 connection.Open();
                 cmd.Parameters
                         .Add(new SqlParameter("@u", SqlDbType.NVarChar))
-                        .Value = _username;
+                        .Value = username;
 
                 cmd.Parameters
                    .Add(new SqlParameter("@p", SqlDbType.NVarChar))
-                   .Value = Helpers.SHA1.Encode(_password);
+                   .Value = Helpers.SHA1.Encode(password);
 
-                var reader = cmd.ExecuteReader();
-                if (reader.Read())
+                using (var reader = cmd.ExecuteReader())
                 {
-
-                    bool IsAdmin = Convert.ToBoolean(reader["IsAdmin"]);
-
-                    if (IsAdmin == true)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                } return false;
+                    if (!reader.Read()) return false;
+                    var isAdmin = Convert.ToBoolean(reader["isAdmin"]);
+                    return isAdmin;
+                }
+            }
             }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<User> GetUserList()
+        {
+            var users = new List<User>();
+            using (var connection = new SqlConnection(GetConnection()))
+            {
+                var sql = @"SELECT * FROM [dbo].[users]";
+                var cmd = new SqlCommand(sql, connection);
+                connection.Open();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var user = new User
+                        {
+                            Id = reader.GetInt32(0),
+                            UserName = reader.GetString(1),
+                            FirstName = reader.GetString(2),
+                            SurName = reader.GetString(3),
+                            FirmName = reader.GetString(4),
+                            Password = reader.GetString(5),
+                            AddedDate = reader.GetDateTime(6),
+                            Email = reader.GetString(7),
+                            IsAdmin = reader.GetBoolean(8),
+                            LastLogin = reader.IsDBNull(9) ? null : (DateTime?)reader.GetDateTime(9),
+                            IPLog = reader.GetValue(10).ToString(),
+                            ModifiedDate = reader.IsDBNull(11) ? null : (DateTime?)reader.GetDateTime(11)
+                        };
+
+                        users.Add(user);
+                    }
+
+                }
+
+                return users;
+            }
         }
 
+
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Username"></param>
+        /// <param name="Password"></param>
+        /// <param name="Email"></param>
         public static void ExecuteInsert(string Username, string Password, string Email)
         {
 
             try
             {
-                SqlConnection con = new SqlConnection(getConnection());
+                SqlConnection con = new SqlConnection(GetConnection());
                 SqlCommand cmd = new SqlCommand();
                 cmd.Connection = con;
                 cmd.CommandType = CommandType.Text;
@@ -164,10 +232,6 @@ namespace FinPlanWeb.Database
                 msg += ex.Message;
                 throw new Exception(msg);
             }
-
-
-
-
         }
 
 

@@ -6,46 +6,100 @@
 
 
 
+s
 <!-- Content -->
+<style type="text/css">
+    .cart-block {
+        padding: 3px 20px;
+    }
+
+    .cart-detail {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .help {
+        color: #999999;
+        font-size: 11px;
+        line-height: 16px;
+    }
+
+    
+</style>
 <div class="container-fluid" id="product-container">
 
     <div class="row-fluid">
         <div class="span12">
             <div class="span2">
-                <div class="col-md-2" style="height: 500px">
+                <div class="col-md-2" style="height: 1200px">
                     <ul id="sidebar" class="nav nav-pills nav-stacked">
-                        <li id="allitems" class="active"><a href="#" data-bind="click: GetAllProducts"><span class="badge pull-right" data-bind="visible:showAllItemCount, text: itemCount"></span>All Items</a></li>
-                        <li id="cloud"><a href="#" data-bind="click: GetCloudProducts"><span class="badge pull-right" data-bind="visible: showCloudItemCount, text: itemCount"></span>Cloud</a></li>
-                        <li id="data-transfer"><a href="#" data-bind="click: GetDataTransferProducts"><span class="badge pull-right" data-bind="visible: showDataTransferItemCount, text: itemCount"></span>Data Transfer</a></li>
-                        <li id="it-support"><a href="#" data-bind="click: GetITSupportProducts"><span class="badge pull-right" data-bind="visible: showITSupportItemCount, text: itemCount"></span>IT Support</a></li>
+                        <li id="allitems" class="active"><a href="#" data-bind="click: GetAllProducts"><span class="badge pull-right" data-bind="    visible: showAllItemCount, text: itemCount"></span>All Items</a></li>
+                        <li id="cloud"><a href="#" data-bind="click: GetCloudProducts"><span class="badge pull-right" data-bind="    visible: showCloudItemCount, text: itemCount"></span>Cloud</a></li>
+                        <li id="data-transfer"><a href="#" data-bind="click: GetDataTransferProducts"><span class="badge pull-right" data-bind="    visible: showDataTransferItemCount, text: itemCount"></span>Data Transfer</a></li>
+                        <li id="it-support"><a href="#" data-bind="click: GetITSupportProducts"><span class="badge pull-right" data-bind="    visible: showITSupportItemCount, text: itemCount"></span>IT Support</a></li>
                     </ul>
                 </div>
             </div>
             <div class="span10">
                 <div class="col-md-10">
-                    <div id="midCol" data-spy="affix" data-offset-top="300">
+                    <div id="midCol" data-spy="affix-top" data-offset-top="300">
                         <div class="well">
 
                             <div class="row">
-                                <div class="col-md-10">
+                                <div class="col-md-8">
                                 </div>
-                                <div class="col-md-2">
-                                    <a href="#" class="btn btn-success btn-sm" role="button">
-                                        <li class="glyphicon glyphicon-shopping-cart"></li>
-                                        View your cart</a>
+                                <div class="col-md-4">
+                                    <div class="btn-group" style="padding-left: 50px">
+                                        <a href="@Url.Action("ShoppingCartView", "ShoppingCart")" class="btn btn-success " role="button">
+                                            <li class="glyphicon glyphicon-shopping-cart"></li>
+                                            <span class="hidden-phone" id="cart-total" data-bind="text: cart_summary"></span></a>
+                                        <a class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                                            <span class="caret"></span>
+                                        </a>
+                                        <ul class="dropdown-menu pull-right" id="cart">
+                                            <!-- ko foreach:cart -->
+                                            <li><a href="#">
+                                                @* <img title="Apple iPad" alt="Apple iPad" class="thumbnail" src="http://merkent.com/bootstrap/image/cache/data/apple/ipad-1-60x60.jpg">*@
+                                                <div class="cart-detail">
+                                                    <span data-bind="text: $data.Name"></span>
+                                                    <div class="help" data-bind="text: $root.getItemSummary($data)"></div>
+                                                </div>
+                                            </a></li>
+                                            <!-- /ko -->
+                                            <li class="divider"></li>
+                                            <li class="cart-block"><b class="pull-right" data-bind="text: '£' + subTotalPrice()"></b>Sub-Total:</li>
+                                            <li class="cart-block"><b class="pull-right" data-bind="text: '£' + totalPrice()"></b>Total:</li>
+                                            <li class="divider"></li>
+                                            <li class="cart-block">
+                                                <button class="btn btn-default btn-sm" onclick="location='http://merkent.com/bootstrap/index.php?route=checkout/cart'" type="button">
+                                                    <li class="glyphicon glyphicon-shopping-cart"></li>
+                                                    View Cart</button>
+                                                <button class="btn btn-default btn-sm" onclick="location='https://merkent.com/bootstrap/index.php?route=checkout/checkout'" type="button"><li class="glyphicon glyphicon-check"></li>Checkout</button>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="row" data-bind="foreach:products">
+                <div class="row" data-bind="foreach: products">
                     <div class="col-md-3 column productbox">
                         <img src="http://placehold.it/460x250/e67e22/ffffff&text=HTML5" class="img-responsive">
-                        <div class="producttitle" data-bind="text:Name"></div>
+                        <div class="producttitle" data-bind="text: Name"></div>
                         <div class="productprice">
-                            <div class="pull-right"><a href="#" class="btn btn-info btn-sm" role="button">More Details</a> <a href="#" class="btn btn-primary btn-sm" role="button">Add to cart</a></div>
-                            <div class="pricetext" data-bind="text: '£' +Price"></div>
+                            <div class="pull-right">
+                                <button class="btn btn-info btn-sm" type="button">
+                                    More Details
+                                <li class="glyphicon glyphicon-zoom-in"></li>
+                                </button>
+                                <button class="btn btn-primary btn-sm" type="button" data-bind="click: $root.addToCart">
+                                    Add to
+                                <li class="glyphicon glyphicon-shopping-cart"></li>
+                                </button>
+                            </div>
+                            <div class="pricetext" data-bind="text: '£' + PriceInStr"></div>
                         </div>
                     </div>
 
@@ -54,6 +108,7 @@
         </div>
     </div>
 </div>
+
 <script type="text/javascript">
 
     var model = {
@@ -61,8 +116,10 @@
         showAllItemCount: ko.observable(true),
         showDataTransferItemCount: ko.observable(false),
         showCloudItemCount: ko.observable(false),
-        showITSupportItemCount: ko.observable(false)
+        showITSupportItemCount: ko.observable(false),
+        cart: ko.observableArray(@Html.Raw(@ViewBag.ShoppingCart))
     };
+
     function ClearActiveItem() {
         $('#sidebar li').removeClass("active");
     }
@@ -75,42 +132,89 @@
         model.showCloudItemCount(false);
         model.showITSupportItemCount(false);
     }
-    
-    model.GetAllProducts = function(element,e){
+    model.cart_summary = ko.computed(function () {
+        var totalPrice = 0.00;
+        var totalQuantity = 0;
+        var shoppingCart = model.cart();
+        $.each(shoppingCart, function (index, value) {
+            totalPrice += value.TotalPrice;
+            totalQuantity += value.Quantity;
+        });
+        return totalQuantity + " item(s) - £" + totalPrice.toFixed(2);
+    });
+    model.subTotalPrice = ko.computed(function () {
+        var totalPrice = 0.00;
+        var shoppingCart = model.cart();
+        $.each(shoppingCart, function (index, value) {
+            totalPrice += value.TotalPrice;
+        });
+        return totalPrice.toFixed(2);
+    });
+
+    model.totalPrice = ko.computed(function () {
+        var subtotal = model.subTotalPrice();
+        var totalPrice = subtotal * 120 / 100;
+        return totalPrice.toFixed(2);
+    });
+    model.getItemSummary = function (item) {
+        return item.Quantity + " x  £" + item.UnitPrice.toFixed(2);
+    };
+
+    model.addToCart = function (item) {
+        $.get("@Url.Action("AddToCart", "ShoppingCart")", { code: item.Code, quantity: 1 }, function (data) {
+            if (data) {
+                model.cart(data);
+            } else {
+                alert('Error');
+            }
+        });
+    };
+    model.GetAllProducts = function (element, e) {
         $.getJSON("@Url.Action("FilterProduct")", { type: 0 }, function (data) {
             ClearActiveItem();
             AddActiveItem('#allitems');
             HideAllCounts();
             model.showAllItemCount(true);
             model.products(data);
-        });};
-    model.GetCloudProducts = function(){
+        });
+    };
+    model.GetCloudProducts = function () {
         $.getJSON("@Url.Action("FilterProduct")", { type: 1 }, function (data) {
             ClearActiveItem();
             AddActiveItem('#cloud');
             HideAllCounts();
             model.showCloudItemCount(true);
             model.products(data);
-        });};
-    model.GetDataTransferProducts = function(){
+        });
+    };
+    model.GetDataTransferProducts = function () {
         $.getJSON("@Url.Action("FilterProduct")", { type: 2 }, function (data) {
             ClearActiveItem();
             AddActiveItem('#data-transfer');
             HideAllCounts();
             model.showDataTransferItemCount(true);
             model.products(data);
-        })};
-    model.GetITSupportProducts = function(){
+        });
+    };
+    model.GetITSupportProducts = function () {
         $.getJSON("@Url.Action("FilterProduct")", { type: 3 }, function (data) {
             ClearActiveItem();
             AddActiveItem('#it-support');
             HideAllCounts();
             model.showITSupportItemCount(true);
             model.products(data);
-        });};
+        });
+    };
     model.itemCount = ko.computed(function () {
         return model.products().length;
     });
 
-                    ko.applyBindings(model, $('#product-container')[0]);
+    ko.applyBindings(model, $('#product-container')[0]);
+
+
+
+
+    $('.dropdown-menu').on('click', function (e) {
+        e.stopPropagation();
+    });
 </script>

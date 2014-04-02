@@ -1,0 +1,51 @@
+﻿@{
+    ViewBag.Title = "UserList";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+
+<h4>User Management</h4>
+<p><button type="button" class="btn btn-primary ">New User <li class="glyphicon glyphicon-user"></li></button>&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn btn-success ">Refresh <li class="glyphicon glyphicon-refresh"></li></button></p>
+
+
+
+<div class="table-responsive">
+<table class="table table-striped table-bordered table-hover" style="font-size: 11px">
+    <thead>
+        <tr>
+            <th>UserID</th>
+            <th>Username</th>
+            <th>Firstname</th>
+            <th>Surname</th>
+            <th>Firmname</th>
+            <th>Register Date</th>
+            <th>Email</th>
+            <th>Administrator</th>
+            <th>Last Login</th>
+            <th>IP Log</th>
+            <th>Modified Date</th>
+            <th>Password Reset</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.Users)
+    {
+       <tr>
+           <td>@item.Id</td>
+           <td>@item.UserName</td>
+           <td>@item.FirstName</td>
+           <td>@item.SurName</td>
+           <td>@item.UserName</td>
+           <td>@item.AddedDate</td>
+           <td>@item.Email</td>
+           <td>@item.IsAdmin</td>
+           <td>@item.LastLogin</td>
+           <td>@item.IPLog</td>
+           <td>@item.ModifiedDate</td>
+           <td><button type="button" class="btn btn-primary btn-xs">Change Password</button></td>
+       </tr>
+      
+    }
+   
+   </tbody>
+</table>
+</div>

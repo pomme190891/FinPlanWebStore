@@ -27,7 +27,6 @@ namespace FinPlanWeb
                         "~/Content/stylish-portfolio.css"));
             
             bundles.Add(new ScriptBundle("~/bundles/bootstrapjs").Include(
-                        "~/Scripts/bootstrap.min.js",
                         "~/Scripts/bootstrap.js"));
 
             bundles.Add(new StyleBundle("~/Content/bootstrapcss").Include(

@@ -39,7 +39,7 @@
         .productbox {
             background-color: #ffffff;
             padding: 10px;
-         margin-left: 23px;
+            margin-left: 21px;
             margin-bottom: 20px;
             -webkit-box-shadow: 0 8px 6px -6px #999;
             -moz-box-shadow: 0 8px 6px -6px #999;
@@ -50,6 +50,7 @@
             font-weight: bold;
             padding: 5px 0 5px 0;
             height: 50px;
+            font-size: 0.9em;
         }
 
         .productprice {
@@ -59,10 +60,10 @@
 
         .pricetext {
             font-weight: bold;
-            font-size: 1.4em;
+            font-size: 0.9em;
         }
     </style>
-    
+
     <script src="@Url.Content("~/Scripts/jquery-1.8.2.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")" type="text/javascript"></script>
@@ -87,25 +88,41 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav">
-                    <li>
-                        <a href="#about">About</a>
+                    <li class="menu">
+                        <a href="@Url.Action("ProductView", "Product")">E-Store</a>
                     </li>
-                    <li>
-                        <a href="#services">Services</a>
-                    </li>
+                    @RenderSection("Account", required: false)
                     <li>
                         <a href="#contact">Contact</a>
-                    </li>
+                    <li>
+                    @RenderSection("Edition", required: false)
+
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    @RenderSection("Logout", required: false)
+
+                    @if (Request.IsAuthenticated)
+                    {
+                        
+                        
+                        <li>
+                            <a href="#">My Account</a>
+                        </li>
+                        <li><a href="@Url.Action("LogOut", "User")" class="btn btn-inverse btn-large">Logout<i class="glyphicon glyphicon-log-out"></i></a></li>
+                    
+
+
+                    }
+                    else
+                    {
+
+                    }
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
         </div>
         <!-- /.container -->
     </nav>
-
+  
     <div class="container">
 
         <div class="row">
@@ -167,18 +184,24 @@
     <!-- /Footer -->
     <!-- /.container -->
     <!-- JavaScript -->
-    @Scripts.Render("~/bundles/jquery")
+    @* @Scripts.Render("~/bundles/jquery") *@
     @Scripts.Render("~/bundles/bootstrapjs")
 
 
 
 
+    <script type="text/javascript">
 
+        var url = window.location;
+        // Will only work if string in href matches with location
+        $('ul.nav a[href="' + url + '"]').parent().addClass('active');
 
+        // Will also work for relative and absolute hrefs
+        $('ul.nav a').filter(function () {
+            return this.href == url;
+        }).parent().addClass('active');
 
-
-
-
+    </script>
 
 </body>
 
