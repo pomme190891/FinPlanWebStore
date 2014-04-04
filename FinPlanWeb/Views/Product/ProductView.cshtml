@@ -4,9 +4,6 @@
    
 }
 
-
-
-s
 <!-- Content -->
 <style type="text/css">
     .cart-block {
@@ -26,12 +23,13 @@ s
 
     
 </style>
+
 <div class="container-fluid" id="product-container">
 
     <div class="row-fluid">
-        <div class="span12">
-            <div class="span2">
-                <div class="col-md-2" style="height: 1200px">
+        <div class="col-xs-12 .col-md-12">
+           
+                <div class="col-md-2 well">
                     <ul id="sidebar" class="nav nav-pills nav-stacked">
                         <li id="allitems" class="active"><a href="#" data-bind="click: GetAllProducts"><span class="badge pull-right" data-bind="    visible: showAllItemCount, text: itemCount"></span>All Items</a></li>
                         <li id="cloud"><a href="#" data-bind="click: GetCloudProducts"><span class="badge pull-right" data-bind="    visible: showCloudItemCount, text: itemCount"></span>Cloud</a></li>
@@ -39,8 +37,8 @@ s
                         <li id="it-support"><a href="#" data-bind="click: GetITSupportProducts"><span class="badge pull-right" data-bind="    visible: showITSupportItemCount, text: itemCount"></span>IT Support</a></li>
                     </ul>
                 </div>
-            </div>
-            <div class="span10">
+            
+            
                 <div class="col-md-10">
                     <div id="midCol" data-spy="affix-top" data-offset-top="300">
                         <div class="well">
@@ -49,13 +47,16 @@ s
                                 <div class="col-md-8">
                                 </div>
                                 <div class="col-md-4">
-                                    <div class="btn-group" style="padding-left: 50px">
+                                    <div class="btn-group" style="padding-left: 40px">
                                         <a href="@Url.Action("ShoppingCartView", "ShoppingCart")" class="btn btn-success " role="button">
                                             <li class="glyphicon glyphicon-shopping-cart"></li>
-                                            <span class="hidden-phone" id="cart-total" data-bind="text: cart_summary"></span></a>
+                                            <span id="cart-total" data-bind="text: cart_summary"></span></a>
                                         <a class="btn btn-success dropdown-toggle" data-toggle="dropdown">
                                             <span class="caret"></span>
                                         </a>
+                                        
+                                        
+
                                         <ul class="dropdown-menu pull-right" id="cart">
                                             <!-- ko foreach:cart -->
                                             <li><a href="#">
@@ -82,10 +83,10 @@ s
                             </div>
                         </div>
                     </div>
-                </div>
+              
 
                 <div class="row" data-bind="foreach: products">
-                    <div class="col-md-3 column productbox">
+                    <div class="col-md-3" style="width:300px; height:250px; ">
                         <img src="http://placehold.it/460x250/e67e22/ffffff&text=HTML5" class="img-responsive">
                         <div class="producttitle" data-bind="text: Name"></div>
                         <div class="productprice">

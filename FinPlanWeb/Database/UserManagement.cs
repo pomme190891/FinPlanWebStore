@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Data;
 using System.Data.SqlClient;
 using System.Net;
@@ -24,7 +22,7 @@ namespace FinPlanWeb.Database
             public string Email { get; set; }
             public bool IsAdmin { get; set; }
             public DateTime? LastLogin { get; set; }
-            public string IPLog { get; set; }
+            public string IpLog { get; set; }
             public DateTime? ModifiedDate { get; set; }
         }
 
@@ -44,15 +42,11 @@ namespace FinPlanWeb.Database
         /// Getting the IP address on the user's change for tracking purposes.
         /// </summary>
         /// <returns></returns>
-        private static string GetIP()
+        protected static string GetIp()
         {
-            string strHostName = "";
-            strHostName = System.Net.Dns.GetHostName();
-
-            IPHostEntry ipEntry = System.Net.Dns.GetHostEntry(strHostName);
-
-            string ipaddress = Convert.ToString(ipEntry.AddressList[2]);
-
+            var strHostName = Dns.GetHostName();
+            var ipEntry = Dns.GetHostEntry(strHostName);
+            var ipaddress = Convert.ToString(ipEntry.AddressList[2]);
             return ipaddress;
         }
 
@@ -60,18 +54,20 @@ namespace FinPlanWeb.Database
         /// <summary>
         /// Check whether the user exists...
         /// </summary>
-        /// <param name="_username"></param>
-        /// <param name="_password"></param>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
         /// <returns></returns>
-        public static bool isValid(string _username, string _password)
+        public static bool IsValid(string username, string password)
         {
-            ///Establishing a connection db
+
 
             using (var connection = new SqlConnection(GetConnection()))
             {
-                string sql = @"SELECT [Username] FROM [dbo].[users] WHERE [Username] = @u AND [Password] = @p";
-                string sql2 = @"UPDATE Users SET LastLogin = GETDATE() WHERE [Username] = @u AND [Password] =@p";
-                string sql3 = @"UPDATE [dbo].[users] SET iplog = @ip WHERE [Username] = @u AND [Password] =@p";
+
+
+                const string sql = @"SELECT [Username] FROM [dbo].[users] WHERE [Username] = @u AND [Password] = @p";
+                const string sql2 = @"UPDATE Users SET LastLogin = GETDATE() WHERE [Username] = @u AND [Password] =@p";
+                const string sql3 = @"UPDATE [dbo].[users] SET iplog = @ip WHERE [Username] = @u AND [Password] =@p";
 
 
                 var cmd = new SqlCommand(sql, connection);
@@ -82,23 +78,23 @@ namespace FinPlanWeb.Database
                 cmd.Parameters
 
                           .Add(new SqlParameter("@u", SqlDbType.NVarChar))
-                          .Value = _username;
+                          .Value = username;
                 cmd.Parameters
                           .Add(new SqlParameter("@p", SqlDbType.NVarChar))
-                          .Value = Helpers.SHA1.Encode(_password);
+                          .Value = Helpers.SHA1.Encode(password);
                 cmd2.Parameters
                           .Add(new SqlParameter("@u", SqlDbType.NVarChar))
-                          .Value = _username;
+                          .Value = username;
                 cmd2.Parameters
                           .Add(new SqlParameter("@p", SqlDbType.NVarChar))
-                          .Value = Helpers.SHA1.Encode(_password);
+                          .Value = Helpers.SHA1.Encode(password);
                 cmd3.Parameters
                           .Add(new SqlParameter("@u", SqlDbType.NVarChar))
-                          .Value = _username;
+                          .Value = username;
                 cmd3.Parameters
                           .Add(new SqlParameter("@p", SqlDbType.NVarChar))
-                          .Value = Helpers.SHA1.Encode(_password);
-                cmd3.Parameters.AddWithValue("@ip", GetIP());
+                          .Value = Helpers.SHA1.Encode(password);
+                cmd3.Parameters.AddWithValue("@ip", GetIp());
 
 
                 var reader = cmd.ExecuteReader();
@@ -129,7 +125,7 @@ namespace FinPlanWeb.Database
         {
             using (var connection = new SqlConnection(GetConnection()))
             {
-                string sql = @"SELECT [isAdmin] FROM [dbo].[users] WHERE [Username] = @u AND [Password] = @p";
+                const string sql = @"SELECT [isAdmin] FROM [dbo].[users] WHERE [Username] = @u AND [Password] = @p";
                 var cmd = new SqlCommand(sql, connection);
 
                 connection.Open();
@@ -148,7 +144,7 @@ namespace FinPlanWeb.Database
                     return isAdmin;
                 }
             }
-            }
+        }
 
 
         /// <summary>
@@ -160,7 +156,7 @@ namespace FinPlanWeb.Database
             var users = new List<User>();
             using (var connection = new SqlConnection(GetConnection()))
             {
-                var sql = @"SELECT * FROM [dbo].[users]";
+                const string sql = @"SELECT * FROM [dbo].[users]";
                 var cmd = new SqlCommand(sql, connection);
                 connection.Open();
 
@@ -180,7 +176,7 @@ namespace FinPlanWeb.Database
                             Email = reader.GetString(7),
                             IsAdmin = reader.GetBoolean(8),
                             LastLogin = reader.IsDBNull(9) ? null : (DateTime?)reader.GetDateTime(9),
-                            IPLog = reader.GetValue(10).ToString(),
+                            IpLog = reader.GetValue(10).ToString(),
                             ModifiedDate = reader.IsDBNull(11) ? null : (DateTime?)reader.GetDateTime(11)
                         };
 
@@ -200,23 +196,26 @@ namespace FinPlanWeb.Database
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Username"></param>
-        /// <param name="Password"></param>
-        /// <param name="Email"></param>
-        public static void ExecuteInsert(string Username, string Password, string Email)
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <param name="email"></param>
+        public static void ExecuteInsert(string username, string password, string email)
         {
 
             try
             {
-                SqlConnection con = new SqlConnection(GetConnection());
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "INSERT INTO [dbo].[users](Username,Password,Email, isAdmin) VALUES (@Username, @Password, @Email, @IsAdmin)";
+                var con = new SqlConnection(GetConnection());
+                var cmd = new SqlCommand
+                {
+                    Connection = con,
+                    CommandType = CommandType.Text,
+                    CommandText =
+                        "INSERT INTO [dbo].[users](Username,Password,Email, isAdmin) VALUES (@Username, @Password, @Email, @IsAdmin)"
+                };
                 cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@Username", Username);
-                cmd.Parameters.AddWithValue("@Password", Helpers.SHA1.Encode(Password));
-                cmd.Parameters.AddWithValue("@Email", Email);
+                cmd.Parameters.AddWithValue("@Username", username);
+                cmd.Parameters.AddWithValue("@Password", Helpers.SHA1.Encode(password));
+                cmd.Parameters.AddWithValue("@Email", email);
                 cmd.Parameters.AddWithValue("@IsAdmin", 0);
                 if (con.State == ConnectionState.Closed)
                 {
@@ -226,7 +225,7 @@ namespace FinPlanWeb.Database
                 }
 
             }
-            catch (System.Data.SqlClient.SqlException ex)
+            catch (SqlException ex)
             {
                 string msg = "Insert errors";
                 msg += ex.Message;

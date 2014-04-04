@@ -9,7 +9,7 @@ namespace FinPlanWeb.Controllers
         protected override void Initialize(RequestContext requestContext)
         {
             base.Initialize(requestContext);
-            ViewBag.User = Session["User"] as UserLoginDTO;
+            ViewBag.User = Session["User"] as UserLoginDto;
         }
     }
 }

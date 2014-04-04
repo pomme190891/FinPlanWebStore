@@ -149,7 +149,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\ShoppingCartController.cs" />
-    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Database\ProductManagement.cs" />
     <Compile Include="Database\UserManagement.cs" />
     <Compile Include="DTOs\UserLoginDTO.cs" />
@@ -158,6 +158,7 @@
     </Compile>
     <Compile Include="Models\Cart.cs" />
     <Compile Include="Models\Register.cs" />
+    <Compile Include="Models\ResetPassword.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -227,14 +228,15 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\index.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\User\LogIn.cshtml" />
-    <Content Include="Views\User\Register.cshtml" />
+    <Content Include="Views\Account\LogIn.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Shared\_Layout1.cshtml" />
-    <Content Include="Views\User\AdminPage.cshtml" />
-    <Content Include="Views\User\CustomerPage.cshtml" />
+    <Content Include="Views\Account\AdminPage.cshtml" />
+    <Content Include="Views\Account\CustomerPage.cshtml" />
     <Content Include="Views\Product\ProductView.cshtml" />
     <Content Include="Views\Admin\UserList.cshtml" />
     <Content Include="Views\ShoppingCart\ShoppingCartView.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ClassLibrary1\Helpers.csproj">
