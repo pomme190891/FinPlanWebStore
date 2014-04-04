@@ -1,0 +1,146 @@
+﻿@{
+    ViewBag.Title = "Bluecoat Administratio Dashboard";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#adminTab a").click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
+    });
+</script>
+<div style="padding-top: 25px;">
+    <div class="well">
+        <ul class="nav nav-tabs" id="adminTab">
+            <li class="active"><a href="#dashboard"><i class="glyphicon glyphicon-dashboard"></i>Dashboard</a></li>
+            <li><a href="#orderhistory"><i class="glyphicon glyphicon-shopping-cart"></i>Order History</a></li>
+            <li class="dropdown">
+                <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="glyphicon glyphicon-user"></i>User Administration <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#manageuser"><i class="glyphicon glyphicon-cog"></i>Manage Users</a></li>
+                    <li><a href="#useractivity"><i class="glyphicon glyphicon-eye-open"></i>Users Activities</a></li>
+                </ul>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div id="dashboard" class="tab-pane fade in active">
+                <h3>Section A</h3>
+                <p>Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui. Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth.</p>
+            </div>
+            <div id="orderhistory" class="tab-pane fade">
+                <h3>Section B</h3>
+                <p>Vestibulum nec erat eu nulla rhoncus fringilla ut non neque. Vivamus nibh urna, ornare id gravida ut, mollis a magna. Aliquam porttitor condimentum nisi, eu viverra ipsum porta ut. Nam hendrerit bibendum turpis, sed molestie mi fermentum id. Aenean volutpat velit sem. Sed consequat ante in rutrum convallis. Nunc facilisis leo at faucibus adipiscing.</p>
+            </div>
+            <div id="manageuser" class="tab-pane fade">
+
+                <div id="usertable">
+                    <h4>User Management</h4>
+                    <p>
+                        <button type="button" class="btn btn-primary " data-bind="click: addNewUser">
+                            New User
+                            <li class="glyphicon glyphicon-user"></li>
+                        </button>
+                        &nbsp;&nbsp;&nbsp;
+                        <button type="button" class="btn btn btn-success ">
+                            Refresh
+                            <li class="glyphicon glyphicon-refresh"></li>
+                        </button>
+                    </p>
+
+
+
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover" style="font-size: 11px">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Password</th>
+                                    <th>Firstname</th>
+                                    <th>Surname</th>
+                                    <th>Firmname</th>
+                                    <th>Email</th>
+                                    <th>Administrator</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- ko foreach:users -->
+                                <tr>
+                                    <td data-bind="text: UserName"></td>
+                                    <td>********</td>
+                                    <td data-bind="text: FirstName"></td>
+                                    <td data-bind="text: SurName"></td>
+                                    <td data-bind="text: FirmName"></td>
+                                    <td data-bind="text: Email"></td>
+                                    <td data-bind="checked: IsAdmin"></td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary btn-xs" data-bind="click: edit">Edit</button></td>
+                                </tr>
+                                <!-- /ko -->
+                                <!-- ko if: editting -->
+                                <tr>
+                                    <td>
+                                        <input type="text" data-bind="value: newUser.UserName" /></td>
+                                    <td>
+                                        <input type="text" data-bind="value: newUser.Password" /></td>
+                                    <td>
+                                        <input type="text" data-bind="value: newUser.FirstName" /></td>
+                                    <td>
+                                        <input type="text" data-bind="value: newUser.SurName" /></td>
+                                    <td>
+                                        <input type="text" data-bind="value: newUser.FirmName" /></td>
+                                    <td>
+                                        <input type="text" data-bind="value: newUser.Email" /></td>
+                                    <td>
+                                        <input type="checkbox" data-bind="checked: newUser.IsAdmin" /></td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary btn-xs" data-bind="click: save">Save</button></td>
+                                </tr>
+                                <!-- /ko -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <div id="useractivity" class="tab-pane fade">
+                    <h3>Dropdown 2</h3>
+                    <p>Donec vel placerat quam, ut euismod risus. Sed a mi suscipit, elementum sem a, hendrerit velit. Donec at erat magna. Sed dignissim orci nec eleifend egestas. Donec eget mi consequat massa vestibulum laoreet. Mauris et ultrices nulla, malesuada volutpat ante. Fusce ut orci lorem. Donec molestie libero in tempus imperdiet. Cum sociis natoque penatibus et magnis dis parturient.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var model = {
+            newUser: {
+                UserName: ko.observable(),
+                Password: ko.observable(),
+                FirstName: ko.observable(),
+                SurName: ko.observable(),
+                FirmName: ko.observable(),
+                AddedDate: ko.observable(new Date()),
+                Email: ko.observable(),
+                IsAdmin: ko.observable()
+            },
+            users: ko.observableArray(@Html.Raw(@ViewBag.Users)),
+              editting: ko.observable(false)
+          };
+
+          model.addNewUser = function () {
+              model.editting(true);
+          };
+
+          model.edit = function (data) {
+              alert('lalal');
+          };
+
+          model.save = function (data) {
+              $.post("@Url.Action("AddUser")", ko.toJS(data.newUser), function (result) {
+                model.users(result);
+            });
+        }
+        ko.applyBindings(model, $('#usertable')[0]);
+    </script>
+</div>

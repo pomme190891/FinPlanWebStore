@@ -237,6 +237,7 @@
     <Content Include="Views\Admin\UserList.cshtml" />
     <Content Include="Views\ShoppingCart\ShoppingCartView.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Admin\Dashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ClassLibrary1\Helpers.csproj">

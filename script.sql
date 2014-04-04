@@ -1,6 +1,9 @@
 /**** Create an access to the server machine ****/
 USE [master]
-
+drop database finplanweb
+go
+create database finplanweb
+go
 IF EXISTS(SELECT * FROM sys.syslogins
      WHERE name = N'db_access_user')
      DROP LOGIN db_access_user
@@ -22,21 +25,8 @@ GO
 EXEC sp_addrolemember 'db_datawriter', db_access_user
 GO
 
-USE finplanweb
-GO
-IF  EXISTS (SELECT * FROM sys.database_principals WHERE name = N'db_access_admin')
-DROP USER [db_access_admin]
-GO
-CREATE USER db_access_admin FROM LOGIN db_access_admin
-EXEC sp_addrolemember 'db_datareader', db_access_admin
-GO
-EXEC sp_addrolemember 'db_datawriter', db_access_admin
-GO
-EXEC sp_addrolemember 'db_owner', db_access_admin
-GO
 
-
-
+alter table categories nocheck constraint all
 
 /**** Categories Table ****/
 USE [finplanweb]

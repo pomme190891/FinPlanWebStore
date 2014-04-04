@@ -190,16 +190,7 @@ namespace FinPlanWeb.Database
         }
 
 
-
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="username"></param>
-        /// <param name="password"></param>
-        /// <param name="email"></param>
-        public static void ExecuteInsert(string username, string password, string email)
+  public static void AddUser(User user)
         {
 
             try
@@ -210,29 +201,30 @@ namespace FinPlanWeb.Database
                     Connection = con,
                     CommandType = CommandType.Text,
                     CommandText =
-                        "INSERT INTO [dbo].[users](Username,Password,Email, isAdmin) VALUES (@Username, @Password, @Email, @IsAdmin)"
+                        "INSERT INTO [dbo].[users](Username, Firstname, Surname, Firm, Password, RegDate, Email, isAdmin) VALUES (@Username, @Firstname, @Surname, @Firmname, @Password, @RegDate, @Email, @IsAdmin)"
                 };
                 cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@Username", username);
-                cmd.Parameters.AddWithValue("@Password", Helpers.SHA1.Encode(password));
-                cmd.Parameters.AddWithValue("@Email", email);
-                cmd.Parameters.AddWithValue("@IsAdmin", 0);
-                if (con.State == ConnectionState.Closed)
-                {
-                    con.Open();
-                    cmd.ExecuteNonQuery();
-                    con.Close();
-                }
-
+                cmd.Parameters.AddWithValue("@Username", user.UserName);
+                cmd.Parameters.AddWithValue("@Firstname", user.FirstName);
+                cmd.Parameters.AddWithValue("@Surname", user.SurName);
+                cmd.Parameters.AddWithValue("@Firmname", user.FirmName);
+                cmd.Parameters.AddWithValue("@Password", Helpers.SHA1.Encode(user.Password));
+                cmd.Parameters.AddWithValue("@RegDate", DateTime.Now);
+                cmd.Parameters.AddWithValue("@Email", user.Email);
+                cmd.Parameters.AddWithValue("@IsAdmin", user.IsAdmin);
+                
+                if (con.State != ConnectionState.Closed) return;
+                con.Open();
+                cmd.ExecuteNonQuery();
+                con.Close();
             }
             catch (SqlException ex)
             {
-                string msg = "Insert errors";
+                var msg = "Insert errors";
                 msg += ex.Message;
                 throw new Exception(msg);
             }
         }
-
 
     }
 }
