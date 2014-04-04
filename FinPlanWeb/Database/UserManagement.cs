@@ -203,7 +203,7 @@ namespace FinPlanWeb.Database
         /// <param name="Username"></param>
         /// <param name="Password"></param>
         /// <param name="Email"></param>
-        public static void ExecuteInsert(string Username, string Password, string Email)
+        public static void AddUser(User user)
         {
 
             try
@@ -212,19 +212,19 @@ namespace FinPlanWeb.Database
                 SqlCommand cmd = new SqlCommand();
                 cmd.Connection = con;
                 cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "INSERT INTO [dbo].[users](Username,Password,Email, isAdmin) VALUES (@Username, @Password, @Email, @IsAdmin)";
+                cmd.CommandText = "INSERT INTO [dbo].[users](Username,Password,Email, isAdmin,RegDate) VALUES (@Username, @Password, @Email, @IsAdmin, @RegDate)";
                 cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@Username", Username);
-                cmd.Parameters.AddWithValue("@Password", Helpers.SHA1.Encode(Password));
-                cmd.Parameters.AddWithValue("@Email", Email);
-                cmd.Parameters.AddWithValue("@IsAdmin", 0);
+                cmd.Parameters.AddWithValue("@Username", user.UserName);
+                cmd.Parameters.AddWithValue("@Password", Helpers.SHA1.Encode(user.Password));
+                cmd.Parameters.AddWithValue("@Email", user.Email);
+                cmd.Parameters.AddWithValue("@IsAdmin", user.IsAdmin);
+                cmd.Parameters.AddWithValue("@RegDate", DateTime.Now);
                 if (con.State == ConnectionState.Closed)
                 {
                     con.Open();
                     cmd.ExecuteNonQuery();
                     con.Close();
                 }
-
             }
             catch (System.Data.SqlClient.SqlException ex)
             {

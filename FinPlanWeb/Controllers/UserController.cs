@@ -85,10 +85,10 @@ namespace FinPlanWeb.Controllers
             {
                 if (register.Password == register.ConfirmPassword)
                 {
-                    UserManagement.ExecuteInsert(register.Username, register.Password, register.EmailAddress);
-                    register.Username = "";
-                    register.EmailAddress = "";
-                    ModelState.Clear();
+                    //UserManagement.AddUser(register.Username, register.Password, register.EmailAddress);
+                    //register.Username = "";
+                    //register.EmailAddress = "";
+                    //ModelState.Clear();
                 }
             }
             else
