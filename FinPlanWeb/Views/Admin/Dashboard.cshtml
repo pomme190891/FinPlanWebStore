@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Bluecoat Administratio Dashboard";
+    ViewBag.Title = "Bluecoat Administration Dashboard";
     Layout = "~/Views/Shared/_Layout1.cshtml";
 }
 
@@ -41,15 +41,15 @@
                     <p>
                         <button type="button" class="btn btn-primary " data-bind="click: addNewUser">
                             New User
-                            <li class="glyphicon glyphicon-user"></li>
+                            <i class="glyphicon glyphicon-user"></i>
                         </button>
                         &nbsp;&nbsp;&nbsp;
                         <button type="button" class="btn btn btn-success ">
                             Refresh
-                            <li class="glyphicon glyphicon-refresh"></li>
+                            <i class="glyphicon glyphicon-refresh"></i>
                         </button>
                     </p>
-
+                    <div class="alert alert-danger" data-bind="html: validationMessage, visible: validationMessage"></div>
 
 
                     <div class="table-responsive">
@@ -69,52 +69,56 @@
                             <tbody>
                                 <!-- ko foreach:users -->
                                 <tr>
-                                    <td data-bind="text: UserName"></td>
-                                    <td>********</td>
-                                    <td data-bind="text: FirstName"></td>
-                                    <td data-bind="text: SurName"></td>
-                                    <td data-bind="text: FirmName"></td>
-                                    <td data-bind="text: Email"></td>
-                                    <td data-bind="checked: IsAdmin"></td>
-                                    <td>
-                                        <button type="button" class="btn btn-primary btn-xs" data-bind="click: edit">Edit</button></td>
+                                    <td class="col-md-1" data-bind="text: UserName"></td>
+                                    <td class="col-md-1">********</td>
+                                    <td class="col-md-2" data-bind="text: FirstName"></td>
+                                    <td class="col-md-2" data-bind="text: SurName"></td>
+                                    <td class="col-md-1" data-bind="text: FirmName"></td>
+                                    <td class="col-md-2" data-bind="text: Email"></td>
+                                    <td class="col-md-1" data-bind="text: IsAdmin"></td>
+                                    <td class="col-md-2">
+                                        <button type="button" class="btn btn-primary btn-xs" data-bind="click: $root.edit">Edit</button>
+                                        <button type="button" class="btn btn-danger btn-xs" data-bind="    click: $root.edit">Delete</button></td>
                                 </tr>
                                 <!-- /ko -->
-                                <!-- ko if: editting -->
+                                <!-- ko if: editting() || creating() -->
                                 <tr>
-                                    <td>
-                                        <input type="text" data-bind="value: newUser.UserName" /></td>
-                                    <td>
-                                        <input type="text" data-bind="value: newUser.Password" /></td>
-                                    <td>
-                                        <input type="text" data-bind="value: newUser.FirstName" /></td>
-                                    <td>
-                                        <input type="text" data-bind="value: newUser.SurName" /></td>
-                                    <td>
-                                        <input type="text" data-bind="value: newUser.FirmName" /></td>
-                                    <td>
-                                        <input type="text" data-bind="value: newUser.Email" /></td>
-                                    <td>
-                                        <input type="checkbox" data-bind="checked: newUser.IsAdmin" /></td>
-                                    <td>
+                                    <!-- ko if:creating() -->
+                                    <td class="col-md-1">
+                                        <input type="text" data-bind="value: userDetails.UserName, disable: editting()" /></td>
+                                    <td class="col-md-1">
+                                        <input type="text" data-bind="value: userDetails.Password, disable: editting()" /></td>
+                                    <!-- /ko -->
+                                    <!-- ko if:editting() -->
+                                    <td class="col-md-1" data-bind="text: userDetails.UserName"> </td>
+                                    <td class="col-md-1">********</td>
+                                    <!-- /ko -->
+                                    <td class="col-md-2">
+                                        <input  type="text" data-bind="value: userDetails.FirstName" /></td>
+                                    <td class="col-md-2">
+                                        <input  type="text" data-bind="value: userDetails.SurName" /></td>
+                                    <td class="col-md-1">
+                                        <input  type="text" data-bind="value: userDetails.FirmName" /></td>
+                                    <td class="col-md-2">
+                                        <input  type="text" data-bind="value: userDetails.Email" /></td>
+                                    <td class="col-md-1">
+                                        <input  type="checkbox" data-bind="checked: userDetails.IsAdmin" /></td>
+                                    <td class="col-md-2">
                                         <button type="button" class="btn btn-primary btn-xs" data-bind="click: save">Save</button></td>
                                 </tr>
                                 <!-- /ko -->
                             </tbody>
                         </table>
+                        <div id="page-selection"></div>
                     </div>
 
-                </div>
-                <div id="useractivity" class="tab-pane fade">
-                    <h3>Dropdown 2</h3>
-                    <p>Donec vel placerat quam, ut euismod risus. Sed a mi suscipit, elementum sem a, hendrerit velit. Donec at erat magna. Sed dignissim orci nec eleifend egestas. Donec eget mi consequat massa vestibulum laoreet. Mauris et ultrices nulla, malesuada volutpat ante. Fusce ut orci lorem. Donec molestie libero in tempus imperdiet. Cum sociis natoque penatibus et magnis dis parturient.</p>
                 </div>
             </div>
         </div>
     </div>
     <script type="text/javascript">
         var model = {
-            newUser: {
+            userDetails: {
                 UserName: ko.observable(),
                 Password: ko.observable(),
                 FirstName: ko.observable(),
@@ -125,22 +129,79 @@
                 IsAdmin: ko.observable()
             },
             users: ko.observableArray(@Html.Raw(@ViewBag.Users)),
-              editting: ko.observable(false)
-          };
+            editting: ko.observable(false),
+            creating: ko.observable(false),
+            validationMessage: ko.observable(null)
+        };
 
-          model.addNewUser = function () {
-              model.editting(true);
-          };
+        model.addNewUser = function () {
+            model.clearUserDetails();
+            model.creating(true);
+            model.editting(false);
+        };
 
-          model.edit = function (data) {
-              alert('lalal');
-          };
+        model.edit = function (data) {
+            model.creating(false);
+            model.editting(true);
+            model.validationMessage(null);
+            model.userDetails.UserName(data.UserName);
+            model.userDetails.Password("***********");
+            model.userDetails.FirstName(data.FirstName);
+            model.userDetails.SurName(data.SurName);
+            model.userDetails.FirmName(data.FirmName);
+            model.userDetails.Email(data.Email);
+            model.userDetails.IsAdmin(data.IsAdmin);
+        };
 
-          model.save = function (data) {
-              $.post("@Url.Action("AddUser")", ko.toJS(data.newUser), function (result) {
-                model.users(result);
-            });
+        model.save = function (data) {
+            if (model.editting()) {
+                $.post("@Url.Action("UserUpdate")", ko.toJS(data.userDetails), function (result) {
+                    if (!result.passed) {
+                        debugger;
+                        model.validationMessage(result.validationMessage);
+                    } else {
+                        model.users(result.users);
+                        alert('Update successfully.');
+                        model.creating(false);
+                        model.editting(false);
+                        model.clearUserDetails();
+                    }
+                });
+            } else {
+                $.post("@Url.Action("AddUser")", ko.toJS(data.userDetails), function (result) {
+                    if (!result.passed) {
+                        model.validationMessage(result.validationMessage);
+                    } else {
+                        model.users(result.users);
+                        alert('Save successfully.');
+                        model.creating(false);
+                        model.editting(false);
+                        model.clearUserDetails();
+                    }
+                });
+            }
+
+
+        };
+
+        model.clearUserDetails = function () {
+            model.userDetails.UserName("");
+            model.userDetails.Password("");
+            model.userDetails.FirstName("");
+            model.userDetails.SurName("");
+            model.userDetails.FirmName("");
+            model.userDetails.Email("");
+            model.userDetails.IsAdmin("");
+            model.validationMessage(null);
         }
+
+        $('#page-selection').bootpag({
+            total: @ViewBag.TotalUsersPage
+            }).on("page", function (event, /* page number here */ num) {
+                $.post("@Url.Action("Paging")", {num:num}, function(users) {
+                model.users(users);
+            });
+        });
         ko.applyBindings(model, $('#usertable')[0]);
     </script>
 </div>

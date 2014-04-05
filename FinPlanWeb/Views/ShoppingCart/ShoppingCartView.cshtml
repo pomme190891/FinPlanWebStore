@@ -3,13 +3,17 @@
     Layout = "~/Views/Shared/_Layout1.cshtml";
 }
 
-<div id="shoppingCart" class="col-xs-12 col-sm-12 col-md-12">
+<div id="shoppingCart" class="col-xs-12 col-sm-12 col-md-12" style="padding-top: 25px;">
 
-    <h2>Shopping Cart</h2>
-    <div class="alert alert-danger" data-bind="visible: showCartEmptyMsg">
-        Your shopping cart is empty!
-    </div>
-    <div class="table-responsive">
+    <div class="panel panel-primary">
+        <div class="panel panel-heading">
+            <h3>Shopping Cart</h3>
+        </div>
+        
+            <div class="alert alert-warning col-md-6 col-md-offset-3" data-bind="visible: showCartEmptyMsg">
+                Your shopping cart is empty!
+            </div>
+        
         <table class="table table-striped table-bordered table-hover" data-bind="visible: !showCartEmptyMsg()">
             <thead>
                 <tr>
@@ -81,17 +85,23 @@
                 </tr>
             </tbody>
         </table>
-        <div class="form-actions" data-bind="visible: showCartEmptyMsg">
-            <a class="btn btn-default" href="@Url.Action("ProductView", "Product")">Continue</a>
-        </div>
 
-        <div class="form-actions" data-bind="visible: !showCartEmptyMsg()">
-            <a class="btn btn-default" href="@Url.Action("ProductView", "Product")">Continue Shopping</a>
-            <a class="btn btn-primary" href="@Url.Action("Index", "Checkout")"><i class="icon-white icon-shopping-cart"></i>Checkout</a>
 
+
+        <div class="panel panel-footer">
+            <div class="row">
+                <div class="col-xs-3" data-bind="visible: showCartEmptyMsg">
+                    <a class="btn btn-primary pull-left" href="@Url.Action("ProductView", "Product")"><i class="glyphicon glyphicon-share-alt"></i>Continue</a>
+                </div>
+                <div style="padding-right: 25px; padding-left: 25px;" data-bind="visible: !showCartEmptyMsg()">
+                    <a class="btn btn-primary pull-left" href="@Url.Action("ProductView", "Product")"><i class="glyphicon glyphicon-share-alt"></i>Continue Shopping</a>
+                    <a class="btn btn-success pull-right" href="@Url.Action("CheckOut", "Checkout")"><i class="glyphicon glyphicon-shopping-cart"></i>Checkout</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
 
 
 

@@ -11,7 +11,7 @@ namespace FinPlanWeb.Controllers
         //
         // GET: /CheckOut/
 
-        public ActionResult Index()
+        public ActionResult CheckOut()
         {
             return View();
         }

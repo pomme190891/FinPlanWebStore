@@ -190,7 +190,7 @@ namespace FinPlanWeb.Database
         }
 
 
-  public static void AddUser(User user)
+        public static void AddUser(User user)
         {
 
             try
@@ -212,7 +212,7 @@ namespace FinPlanWeb.Database
                 cmd.Parameters.AddWithValue("@RegDate", DateTime.Now);
                 cmd.Parameters.AddWithValue("@Email", user.Email);
                 cmd.Parameters.AddWithValue("@IsAdmin", user.IsAdmin);
-                
+
                 if (con.State != ConnectionState.Closed) return;
                 con.Open();
                 cmd.ExecuteNonQuery();
@@ -223,6 +223,27 @@ namespace FinPlanWeb.Database
                 var msg = "Insert errors";
                 msg += ex.Message;
                 throw new Exception(msg);
+            }
+        }
+
+
+
+        public static void UpdateUser(User user)
+        {
+            using (var connection = new SqlConnection(GetConnection()))
+            {
+
+                const string sql = @"UPDATE [dbo].[users] SET Firstname=@f, Surname=@s, Firm=@fn, Email=@e, isAdmin=@i WHERE [Username] = @u";
+                connection.Open();
+                var cmd = new SqlCommand(sql, connection);
+                cmd.Parameters.Add(new SqlParameter("@u", SqlDbType.NVarChar)).Value = user.UserName;
+                cmd.Parameters.Add(new SqlParameter("@f", SqlDbType.NVarChar)).Value = user.FirstName;
+                cmd.Parameters.Add(new SqlParameter("@s", SqlDbType.NVarChar)).Value = user.SurName;
+                cmd.Parameters.Add(new SqlParameter("@fn", SqlDbType.NVarChar)).Value = user.FirmName;
+                cmd.Parameters.Add(new SqlParameter("@e", SqlDbType.NVarChar)).Value = user.Email;
+                cmd.Parameters.Add(new SqlParameter("@i", SqlDbType.Bit)).Value = user.IsAdmin;
+
+                cmd.ExecuteNonQuery();
             }
         }
 
