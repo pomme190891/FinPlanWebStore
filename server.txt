@@ -20,3 +20,5 @@ EXEC sp_addrolemember 'db_datareader', db_access_user
 GO
 EXEC sp_addrolemember 'db_datawriter', db_access_user
 GO
+
+Server Password: !uNc.%vQr)H
