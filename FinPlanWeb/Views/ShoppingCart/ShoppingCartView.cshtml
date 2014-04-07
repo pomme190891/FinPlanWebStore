@@ -80,6 +80,10 @@
                     <td class="text-right span2" data-bind="text: '£' + subTotalPrice()"></td>
                 </tr>
                 <tr>
+                    <td class="text-right">VAT (20%):</td>
+                    <td class="text-right" data-bind="text: '£' + vatPrice()"></td>
+                </tr>
+                <tr>
                     <td class="text-right">Total:</td>
                     <td class="text-right span2" data-bind="text: '£' + totalPrice()"></td>
                 </tr>
@@ -140,6 +144,11 @@
         var subtotal = shoppingCartViewModel.subTotalPrice();
         var totalPrice = subtotal * 120 / 100;
         return totalPrice.toFixed(2);
+    });
+
+    shoppingCartViewModel.vatPrice = ko.computed(function() {
+        var vatprice = shoppingCartViewModel.subTotalPrice() * 20 / 100;
+        return vatprice.toFixed(2);
     });
 
     ko.applyBindings(shoppingCartViewModel, $('#shoppingCart')[0]);

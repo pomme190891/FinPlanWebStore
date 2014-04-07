@@ -12,10 +12,10 @@ namespace FinPlanWeb.Controllers
         //
         // GET: /User/
 
-        public ActionResult Index()
-        {
-            return View();
-        }
+        //public ActionResult Index()
+        //{
+        //    return View();
+        //}
 
         [HttpGet]
         public ActionResult LogIn()
@@ -29,13 +29,13 @@ namespace FinPlanWeb.Controllers
             return View();
         }
 
-        public ActionResult AdminPage()
+        //public ActionResult AdminPage()
 
-        {
-            var users = UserManagement.GetUserList();
-            ViewBag.Users = users;
-            return View();
-        }
+        //{
+        //    var users = UserManagement.GetUserList();
+        //    ViewBag.Users = users;
+        //    return View();
+        //}
 
 
         public ActionResult ResetPassword()

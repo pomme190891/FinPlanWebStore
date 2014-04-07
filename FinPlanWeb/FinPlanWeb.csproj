@@ -157,6 +157,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Cart.cs" />
+    <Compile Include="Models\Checkout.cs" />
     <Compile Include="Models\Register.cs" />
     <Compile Include="Models\ResetPassword.cs" />
     <Compile Include="Models\User.cs" />
@@ -171,8 +172,12 @@
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\Image\bg.jpg" />
     <Content Include="Content\Image\callout.jpg" />
+    <Content Include="Content\Image\direct_debit-512.png" />
+    <Content Include="Content\Image\DIRECT_DEBIT_LOGO.jpg" />
+    <Content Include="Content\Image\express-checkout-hero-sg.png" />
     <Content Include="Content\Image\favicon.png" />
     <Content Include="Content\Image\makedifferenceimage.png" />
+    <Content Include="Content\Image\paypal_logo.jpg" />
     <Content Include="Content\Image\portfolio-1.jpg" />
     <Content Include="Content\Image\portfolio-2.jpg" />
     <Content Include="Content\Image\portfolio-3.jpg" />

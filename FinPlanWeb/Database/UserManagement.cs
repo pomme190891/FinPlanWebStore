@@ -156,7 +156,7 @@ namespace FinPlanWeb.Database
             var users = new List<User>();
             using (var connection = new SqlConnection(GetConnection()))
             {
-                const string sql = @"SELECT * FROM [dbo].[users]";
+                const string sql = @"SELECT * FROM [dbo].[users] WHERE [deleted]='0'";
                 var cmd = new SqlCommand(sql, connection);
                 connection.Open();
 
