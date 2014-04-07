@@ -45,8 +45,8 @@ namespace FinPlanWeb.Database
             using (var connection = new SqlConnection(GetConnection()))
             {
 
-                var _sql = @"SELECT * FROM [dbo].[products] where productCode = @c ";
-                var cmd = new SqlCommand(_sql, connection);
+                const string sql = @"SELECT * FROM [dbo].[products] where productCode = @c ";
+                var cmd = new SqlCommand(sql, connection);
 
                 cmd.Parameters
 
@@ -82,7 +82,7 @@ namespace FinPlanWeb.Database
 
 
         /// <summary>
-        /// 
+        /// Get all Products
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
@@ -94,12 +94,12 @@ namespace FinPlanWeb.Database
             using (var connection = new SqlConnection(GetConnection()))
             {
 
-                var _sql = @"SELECT * FROM [dbo].[products]";
+                var sql = @"SELECT * FROM [dbo].[products]";
                 if (type != ProductType.All)
                 {
-                    _sql += " WHERE categoriesID = @t";
+                    sql += " WHERE categoriesID = @t";
                 }
-                var cmd = new SqlCommand(_sql, connection);
+                var cmd = new SqlCommand(sql, connection);
 
                 connection.Open();
                 if (type != ProductType.All)

@@ -57,7 +57,6 @@
                             <thead>
                                 <tr>
                                     <th>Username</th>
-                                    <th>Password</th>
                                     <th>Firstname</th>
                                     <th>Surname</th>
                                     <th>Firmname</th>
@@ -70,15 +69,16 @@
                                 <!-- ko foreach:users -->
                                 <tr>
                                     <td class="col-md-1" data-bind="text: UserName"></td>
-                                    <td class="col-md-1">********</td>
-                                    <td class="col-md-2" data-bind="text: FirstName"></td>
-                                    <td class="col-md-2" data-bind="text: SurName"></td>
-                                    <td class="col-md-1" data-bind="text: FirmName"></td>
+                                    <td class="col-md-1" data-bind="text: FirstName"></td>
+                                    <td class="col-md-1" data-bind="text: SurName"></td>
+                                    <td class="col-md-3" data-bind="text: FirmName"></td>
                                     <td class="col-md-2" data-bind="text: Email"></td>
                                     <td class="col-md-1" data-bind="text: IsAdmin"></td>
-                                    <td class="col-md-2">
+                                    <td class="col-md-3">
                                         <button type="button" class="btn btn-primary btn-xs" data-bind="click: $root.edit">Edit</button>
-                                        <button type="button" class="btn btn-danger btn-xs" data-bind="    click: $root.delete">Delete</button></td>
+                                        <button type="button" class="btn btn-danger btn-xs" data-bind="    click: $root.delete">Delete</button>
+                                        <button type="button" class="btn btn-success btn-xs" data-bind="    click: $root.delete">Change Password</button>
+                                    </td>
                                 </tr>
                                 <!-- /ko -->
                                 <!-- ko if: editting() || creating() || deleting() -->
