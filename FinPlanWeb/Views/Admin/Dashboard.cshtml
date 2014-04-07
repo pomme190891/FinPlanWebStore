@@ -48,6 +48,7 @@
                             Refresh
                             <i class="glyphicon glyphicon-refresh"></i>
                         </button>
+                        <button class="btn btn-danger">Archieved Users</button>
                     </p>
                     <div class="alert alert-danger" data-bind="html: validationMessage, visible: validationMessage"></div>
 
@@ -77,7 +78,7 @@
                                     <td class="col-md-3">
                                         <button type="button" class="btn btn-primary btn-xs" data-bind="click: $root.edit">Edit</button>
                                         <button type="button" class="btn btn-danger btn-xs" data-bind="    click: $root.delete">Delete</button>
-                                        <button type="button" class="btn btn-success btn-xs" data-bind="    click: $root.delete">Change Password</button>
+                                        <button type="button" class="btn btn-success btn-xs" data-toggle="modal" data-target="#changePasswordModal">Change Password</button>
                                     </td>
                                 </tr>
                                 <!-- /ko -->
@@ -127,7 +128,39 @@
                     <h4 class="modal-title" id="myModalLabel">Create a new user</h4>
                 </div>
                 <div class="modal-body">
-                    ...
+                   
+
+                    
+                    
+                    
+                    
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    <!-- Change Password Modal -->
+    <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Create a new user</h4>
+                </div>
+                <div class="modal-body">
+
+
+
+
+
+
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -210,14 +243,23 @@
         };
 
         model.delete = function(data) {
-            $.post("@Url.Action("DeleteUser")"), ko.toJS(data.userDetails), function(result) {
-                model.users(result.users);
-                alert('Delete Successfully');
-                model.creating(false);
-                model.editting(false);
-                
-            }
+
+            $.ajax({
+                url: "@Url.Action("DeleteUser")",
+                type: "POST",
+                data: { username: data.UserName },
+                dataType: "json",
+                success: function (result) {
+                    debugger;
+                    model.users(result.users);
+                    alert('Delete Successfully');
+                    model.creating(false);
+                    model.editting(false);
+                }
+            });
+
         };
+        
 
 
         model.clearUserDetails = function () {

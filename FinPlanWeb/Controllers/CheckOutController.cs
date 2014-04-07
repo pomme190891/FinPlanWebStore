@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Helpers;
@@ -30,8 +31,40 @@ namespace FinPlanWeb.Controllers
         {
             var serializer = new JavaScriptSerializer();
             var checkoutObj = serializer.Deserialize<Checkout>(checkout);
-            var validationMessage = Validate(checkoutObj);
+            var validationMessage = string.Join("<br/>",Validate(checkoutObj));
+            if (!validationMessage.Any())
+            {
+                TempData["checkoutInfo"] = checkoutObj;
+            }
             return Json(new { validationMessage, passed = !validationMessage.Any() });
+        }
+
+        public ActionResult OrderByDirectDebit()
+        {
+            var checkout = TempData["checkoutInfo"] as Checkout;
+            if (checkout == null)
+            {
+                throw new InvalidOperationException("You need to validate checkout before ordering by direct debit.");
+            }
+            
+            //Save = insert to database , select the ID out as confirmationId
+
+
+            SendEmail(checkout);
+            return View();
+        }
+
+        private void SendEmail(Checkout checkout, string orderNumber = "")
+        {
+            MailMessage mail = new MailMessage("you@yourcompany.com", checkout.BillingInfo.Email);
+            SmtpClient client = new SmtpClient();
+            client.Port = 25;
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            client.UseDefaultCredentials = false;
+            client.Host = "localhost";
+            mail.Subject = "Order Confirmation:" + orderNumber;
+            mail.Body = "this is my test email body";
+            client.Send(mail);
         }
 
         private IList<string> Validate(Checkout checkout)
@@ -64,15 +97,16 @@ namespace FinPlanWeb.Controllers
             }
             if (string.IsNullOrEmpty(checkout.BillingInfo.City))
             {
-                validationMessage.Add("Street Name cannot be emptied.");
+                validationMessage.Add("City cannot be emptied.");
             }
             if (string.IsNullOrEmpty(checkout.BillingInfo.County))
+
             {
-                validationMessage.Add("Street Name cannot be emptied.");
+                validationMessage.Add("County cannot be emptied.");
             }
             if (string.IsNullOrEmpty(checkout.BillingInfo.PostCode))
             {
-                validationMessage.Add("Street Name cannot be emptied.");
+                validationMessage.Add("Postcode cannot be emptied.");
             }
             else
             {
@@ -82,7 +116,7 @@ namespace FinPlanWeb.Controllers
                 var match = regex.Match(checkout.BillingInfo.PostCode);
                 if (!match.Success)
                 {
-                    validationMessage.Add("The UK postcode entered is not valid, please retype");
+                    validationMessage.Add("The UK postcode entered is not valid.");
                 }
             }
 
@@ -114,7 +148,12 @@ namespace FinPlanWeb.Controllers
                 var match = regex.Match(checkout.BillingInfo.Email);
                 if (!match.Success)
                     validationMessage.Add("Invalid email format.");
-            }    
+            }
+
+            if (!checkout.PaymentInfo.IsDirectDebit && !checkout.PaymentInfo.IsPayPal)
+            {
+                validationMessage.Add("Payment method must be set.");
+            }
 
             return validationMessage;
         }

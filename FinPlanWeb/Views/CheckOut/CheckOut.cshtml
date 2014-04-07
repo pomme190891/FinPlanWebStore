@@ -5,13 +5,14 @@
 
 <div style="padding-top: 10px;" id="checkout">
     <div class="well">
-       
 
+        <div class="alert alert-danger" data-bind="html: validationMessage, visible: validationMessage"></div>
         <div class="panel-group" id="accordion" data-bind=" visible: !orderConfirmation()">
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseZero">Cart Summary
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseZero">
+                            Cart Summary
                         </a>
                     </h4>
                 </div>
@@ -41,31 +42,31 @@
                             </tbody>
                         </table>
                         @*<fieldset>
-        <legend>What would you like to do next?</legend>
-        <p>Choose if you have a discount code or reward points you want to use or would like to estimate your delivery cost.</p>
-        <div id="accordion" class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Use Coupon Code
-                        </a>
-                    </h4>
-                </div>
-                <div id="collapseOne" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <h5>Enter your coupon here:</h5>
+                                <legend>What would you like to do next?</legend>
+                                <p>Choose if you have a discount code or reward points you want to use or would like to estimate your delivery cost.</p>
+                                <div id="accordion" class="panel-group">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Use Coupon Code
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="collapseOne" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                <h5>Enter your coupon here:</h5>
 
-                        <form class="form-inline" role="search">
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Search">
-                            </div>
-                            <button type="submit" class="btn btn-default">Submit</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </fieldset> *@
+                                                <form class="form-inline" role="search">
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control" placeholder="Search">
+                                                    </div>
+                                                    <button type="submit" class="btn btn-default">Submit</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset> *@
                         <table class="table table-striped">
                             <tbody>
                                 <tr>
@@ -90,7 +91,8 @@
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">Billing Information
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                            Billing Information
                         </a>
                     </h4>
                 </div>
@@ -159,7 +161,8 @@
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">Payment Method
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                            Payment Method
                         </a>
                     </h4>
                 </div>
@@ -171,7 +174,7 @@
                                 <div class="col-md-6">
                                     <div class="radio">
                                         <label>
-                                            <input type="radio" name="optionsRadios" id="optionsDirectDebit" data-bind="checked: checkout.PaymentInfo.IsDirectDebit">
+                                            <input type="radio" name="optionsRadios" value="true" id="optionsDirectDebit" data-bind="checked: checkout.PaymentInfo.IsDirectDebit">
                                             <img width="125px" height="39px" src="http://localhost/FinPlanWeb/Content/Image/DIRECT_DEBIT_LOGO.jpg" />
                                         </label>
                                     </div>
@@ -179,21 +182,19 @@
                                 <div class="col-md-6">
                                     <div class="radio">
                                         <label>
-                                            <input type="radio" name="optionsRadios" id="optionsPaypal" data-bind="checked: checkout.PaymentInfo.IsPayPal">
+                                            <input type="radio" name="optionsRadios" value="true" id="optionsPaypal" data-bind="checked: checkout.PaymentInfo.IsPayPal">
                                             <img width="125px" height="43px" src="http://localhost/FinPlanWeb/Content/Image/paypal_logo.jpg" />
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                   
+
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-           
         </div>
         <div data-bind="visible: orderConfirmation">
             <div class="well">
@@ -222,31 +223,31 @@
                     </tbody>
                 </table>
                 @*<fieldset>
-        <legend>What would you like to do next?</legend>
-        <p>Choose if you have a discount code or reward points you want to use or would like to estimate your delivery cost.</p>
-        <div id="accordion" class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Use Coupon Code
-                        </a> 
-                    </h4>
-                </div>
-                <div id="collapseOne" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <h5>Enter your coupon here:</h5>
+                        <legend>What would you like to do next?</legend>
+                        <p>Choose if you have a discount code or reward points you want to use or would like to estimate your delivery cost.</p>
+                        <div id="accordion" class="panel-group">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Use Coupon Code
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapseOne" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <h5>Enter your coupon here:</h5>
 
-                        <form class="form-inline" role="search">
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Search">
+                                        <form class="form-inline" role="search">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" placeholder="Search">
+                                            </div>
+                                            <button type="submit" class="btn btn-default">Submit</button>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
-                            <button type="submit" class="btn btn-default">Submit</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </fieldset> *@
+                        </div>
+                    </fieldset> *@
                 <table class="table table-striped">
                     <tbody>
                         <tr>
@@ -286,12 +287,12 @@
             </div>
 
 
-            
-                <button class="btn btn-success">Confirm Order</button> <button class="btn btn-danger" data-bind="click: backToEdit ">Back to Edit</button>
-            
+
+            <button class="btn btn-success" data-bind="click:continueOrder">Confirm Order</button> <button class="btn btn-danger" data-bind="click: backToEdit ">Back to Edit</button>
+
         </div>
 
-         <button class="btn btn-warning " data-bind="click: continueClickEvent, visible: !orderConfirmation()">Continue</button>
+        <button class="btn btn-warning " data-bind="click: continueClickEvent, visible: !orderConfirmation()">Continue</button>
     </div>
 </div>
 
@@ -300,30 +301,31 @@
     var vm = {
         cart: ko.observableArray(@Html.Raw(@ViewBag.Cart)),
         checkout: ko.mapping.fromJS(@Html.Raw(@ViewBag.Checkout)),
-        orderConfirmation: ko.observable(false)
+        orderConfirmation: ko.observable(false),
+        validationMessage: ko.observable()
     }
 
-    vm.subTotalPrice = ko.computed(function() {
+    vm.subTotalPrice = ko.computed(function () {
         var totalPrice = 0.00;
         var shoppingCart = vm.cart();
-        $.each(shoppingCart, function(index, value) {
+        $.each(shoppingCart, function (index, value) {
             totalPrice += value.TotalPrice;
         });
         return totalPrice.toFixed(2);
     });
 
-    vm.totalPrice = ko.computed(function() {
+    vm.totalPrice = ko.computed(function () {
         var subtotal = vm.subTotalPrice();
         var totalPrice = subtotal * 120 / 100;
         return totalPrice.toFixed(2);
     });
 
-    vm.vatPrice = ko.computed(function() {
+    vm.vatPrice = ko.computed(function () {
         var vatprice = vm.subTotalPrice() * 20 / 100;
         return vatprice.toFixed(2);
     });
 
-    vm.billingInfoDescription = ko.computed(function() {
+    vm.billingInfoDescription = ko.computed(function () {
         var html = "";
         html = vm.checkout.BillingInfo.FirstName() + '  ' + vm.checkout.BillingInfo.SurName() + ' <br />' +
             vm.checkout.BillingInfo.FirmName() + '<br />' + vm.checkout.BillingInfo.BuildingName() + '<br/>' + vm.checkout.BillingInfo.StreetName() +
@@ -332,20 +334,28 @@
         return html;
     });
 
-    vm.continueClickEvent = function() {
-        var hack = {};
+    vm.continueOrder = function() {
+        if (vm.checkout.PaymentInfo.IsDirectDebit()) {
+            window.location.href = "@Url.Action("OrderByDirectDebit")";
+        }
+    };
+
+    vm.continueClickEvent = function () {
+
         var tempCheckout = ko.toJSON(vm.checkout);
-        hack.BillingInfo = tempCheckout.BillingInfo;
-        hack.PaymentInfo = tempCheckout.PaymentInfo;
-        $.post("@Url.Action("ValidateCheckout")", {checkout:tempCheckout}, function (result) {
-            if (result.passed) {
+
+        $.post("@Url.Action("ValidateCheckout")", { checkout: tempCheckout }, function (result) {
+            vm.validationMessage(null);
+            if (!result.passed) {
+                vm.validationMessage(result.validationMessage);
+            } else {
                 vm.orderConfirmation(true);
             }
         });
-       
+
     };
 
-    vm.backToEdit = function() {
+    vm.backToEdit = function () {
         vm.orderConfirmation(false);
     };
 

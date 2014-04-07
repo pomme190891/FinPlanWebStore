@@ -91,9 +91,9 @@ namespace FinPlanWeb.Controllers
         }
 
 
-        public ActionResult DeleteUser(UserManagement.User user)
+        public ActionResult DeleteUser(string username)
         {
-            UserManagement.DeleteUser(user);
+            UserManagement.DeleteUser(username);
             return Json(new
             {
                 users = UserManagement.GetUserList()   

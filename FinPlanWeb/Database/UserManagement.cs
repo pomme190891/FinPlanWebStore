@@ -67,13 +67,13 @@ namespace FinPlanWeb.Database
 
                 const string sql = @"SELECT [Username] FROM [dbo].[users] WHERE [Username] = @u AND [Password] = @p";
                 const string sql2 = @"UPDATE Users SET LastLogin = GETDATE() WHERE [Username] = @u AND [Password] =@p";
-                const string sql3 = @"UPDATE [dbo].[users] SET iplog = @ip WHERE [Username] = @u AND [Password] =@p";
+                //const string sql3 = @"UPDATE [dbo].[users] SET iplog = @ip WHERE [Username] = @u AND [Password] =@p";
 
 
                 var cmd = new SqlCommand(sql, connection);
                 var cmd2 = new SqlCommand(sql2, connection);
-                var cmd3 = new SqlCommand(sql3, connection);
-
+                //var cmd3 = new SqlCommand(sql3, connection);
+                
                 connection.Open();
                 cmd.Parameters
 
@@ -88,13 +88,13 @@ namespace FinPlanWeb.Database
                 cmd2.Parameters
                           .Add(new SqlParameter("@p", SqlDbType.NVarChar))
                           .Value = Helpers.SHA1.Encode(password);
-                cmd3.Parameters
-                          .Add(new SqlParameter("@u", SqlDbType.NVarChar))
-                          .Value = username;
-                cmd3.Parameters
-                          .Add(new SqlParameter("@p", SqlDbType.NVarChar))
-                          .Value = Helpers.SHA1.Encode(password);
-                cmd3.Parameters.AddWithValue("@ip", GetIp());
+                //cmd3.Parameters
+                //          .Add(new SqlParameter("@u", SqlDbType.NVarChar))
+                //          .Value = username;
+                //cmd3.Parameters
+                //          .Add(new SqlParameter("@p", SqlDbType.NVarChar))
+                //          .Value = Helpers.SHA1.Encode(password);
+                //cmd3.Parameters.AddWithValue("@ip", GetIp());
 
 
                 var reader = cmd.ExecuteReader();
@@ -104,7 +104,7 @@ namespace FinPlanWeb.Database
                     reader.Dispose();
                     cmd.Dispose();
                     cmd2.ExecuteNonQuery();
-                    cmd3.ExecuteNonQuery();
+                    //cmd3.ExecuteNonQuery();
                     return true;
                 }
                 reader.Dispose();
@@ -247,14 +247,14 @@ namespace FinPlanWeb.Database
             }
         }
 
-        public static void DeleteUser(User user)
+        public static void DeleteUser(string username)
         {
             using (var connection = new SqlConnection(GetConnection()))
             {
                 const string sql = @"UPDATE [dbo].[users] SET [deleted] = '1' WHERE [Username] = @u";
                 connection.Open();
                 var cmd = new SqlCommand(sql, connection);
-                cmd.Parameters.Add(new SqlParameter("@u", SqlDbType.NVarChar)).Value = user.UserName;
+                cmd.Parameters.Add(new SqlParameter("@u", SqlDbType.NVarChar)).Value = username;
                 cmd.ExecuteNonQuery();
 
             }

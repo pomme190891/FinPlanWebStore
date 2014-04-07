@@ -244,6 +244,7 @@
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Admin\Dashboard.cshtml" />
     <Content Include="Views\CheckOut\CheckOut.cshtml" />
+    <Content Include="Views\CheckOut\OrderByDirectDebit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ClassLibrary1\Helpers.csproj">
