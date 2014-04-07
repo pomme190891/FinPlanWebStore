@@ -44,7 +44,7 @@
                             <i class="glyphicon glyphicon-user"></i>
                         </button>
                         &nbsp;&nbsp;&nbsp;
-                        <button type="button" class="btn btn btn-success ">
+                        <button type="button" class="btn btn btn-success " data-toggle="modal" data-target="#myModal">
                             Refresh
                             <i class="glyphicon glyphicon-refresh"></i>
                         </button>
@@ -78,10 +78,10 @@
                                     <td class="col-md-1" data-bind="text: IsAdmin"></td>
                                     <td class="col-md-2">
                                         <button type="button" class="btn btn-primary btn-xs" data-bind="click: $root.edit">Edit</button>
-                                        <button type="button" class="btn btn-danger btn-xs" data-bind="    click: $root.edit">Delete</button></td>
+                                        <button type="button" class="btn btn-danger btn-xs" data-bind="    click: $root.delete">Delete</button></td>
                                 </tr>
                                 <!-- /ko -->
-                                <!-- ko if: editting() || creating() -->
+                                <!-- ko if: editting() || creating() || deleting() -->
                                 <tr>
                                     <!-- ko if:creating() -->
                                     <td class="col-md-1">
@@ -90,19 +90,19 @@
                                         <input type="text" data-bind="value: userDetails.Password, disable: editting()" /></td>
                                     <!-- /ko -->
                                     <!-- ko if:editting() -->
-                                    <td class="col-md-1" data-bind="text: userDetails.UserName"> </td>
+                                    <td class="col-md-1" data-bind="text: userDetails.UserName"></td>
                                     <td class="col-md-1">********</td>
                                     <!-- /ko -->
                                     <td class="col-md-2">
-                                        <input  type="text" data-bind="value: userDetails.FirstName" /></td>
+                                        <input type="text" data-bind="value: userDetails.FirstName" /></td>
                                     <td class="col-md-2">
-                                        <input  type="text" data-bind="value: userDetails.SurName" /></td>
+                                        <input type="text" data-bind="value: userDetails.SurName" /></td>
                                     <td class="col-md-1">
-                                        <input  type="text" data-bind="value: userDetails.FirmName" /></td>
+                                        <input type="text" data-bind="value: userDetails.FirmName" /></td>
                                     <td class="col-md-2">
-                                        <input  type="text" data-bind="value: userDetails.Email" /></td>
+                                        <input type="text" data-bind="value: userDetails.Email" /></td>
                                     <td class="col-md-1">
-                                        <input  type="checkbox" data-bind="checked: userDetails.IsAdmin" /></td>
+                                        <input type="checkbox" data-bind="checked: userDetails.IsAdmin" /></td>
                                     <td class="col-md-2">
                                         <button type="button" class="btn btn-primary btn-xs" data-bind="click: save">Save</button></td>
                                 </tr>
@@ -116,6 +116,29 @@
             </div>
         </div>
     </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Create a new user</h4>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
     <script type="text/javascript">
         var model = {
             userDetails: {
@@ -131,6 +154,7 @@
             users: ko.observableArray(@Html.Raw(@ViewBag.Users)),
             editting: ko.observable(false),
             creating: ko.observable(false),
+            deleting: ko.observable(false),
             validationMessage: ko.observable(null)
         };
 
@@ -138,6 +162,8 @@
             model.clearUserDetails();
             model.creating(true);
             model.editting(false);
+            model.deleting(false);
+
         };
 
         model.edit = function (data) {
@@ -157,13 +183,13 @@
             if (model.editting()) {
                 $.post("@Url.Action("UserUpdate")", ko.toJS(data.userDetails), function (result) {
                     if (!result.passed) {
-                        debugger;
                         model.validationMessage(result.validationMessage);
                     } else {
                         model.users(result.users);
                         alert('Update successfully.');
                         model.creating(false);
                         model.editting(false);
+                        model.deleting(false);
                         model.clearUserDetails();
                     }
                 });
@@ -176,13 +202,23 @@
                         alert('Save successfully.');
                         model.creating(false);
                         model.editting(false);
+                        model.deleting(false);
                         model.clearUserDetails();
                     }
                 });
             }
-
-
         };
+
+        model.delete = function(data) {
+            $.post("@Url.Action("DeleteUser")"), ko.toJS(data.userDetails), function(result) {
+                model.users(result.users);
+                alert('Delete Successfully');
+                model.creating(false);
+                model.editting(false);
+                
+            }
+        };
+
 
         model.clearUserDetails = function () {
             model.userDetails.UserName("");
@@ -199,9 +235,9 @@
             total: @ViewBag.TotalUsersPage
             }).on("page", function (event, /* page number here */ num) {
                 $.post("@Url.Action("Paging")", {num:num}, function(users) {
-                model.users(users);
+                    model.users(users);
+                });
             });
-        });
-        ko.applyBindings(model, $('#usertable')[0]);
+            ko.applyBindings(model, $('#usertable')[0]);
     </script>
 </div>

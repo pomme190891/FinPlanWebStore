@@ -247,6 +247,19 @@ namespace FinPlanWeb.Database
             }
         }
 
+        public static void DeleteUser(User user)
+        {
+            using (var connection = new SqlConnection(GetConnection()))
+            {
+                const string sql = @"UPDATE [dbo].[users] SET [deleted] = '1' WHERE [Username] = @u";
+                connection.Open();
+                var cmd = new SqlCommand(sql, connection);
+                cmd.Parameters.Add(new SqlParameter("@u", SqlDbType.NVarChar)).Value = user.UserName;
+                cmd.ExecuteNonQuery();
+
+            }
+        }
+
     }
 }
 

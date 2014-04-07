@@ -90,6 +90,16 @@ namespace FinPlanWeb.Controllers
             });
         }
 
+
+        public ActionResult DeleteUser(UserManagement.User user)
+        {
+            UserManagement.DeleteUser(user);
+            return Json(new
+            {
+                users = UserManagement.GetUserList()   
+            });
+        }
+
         public List<string> Validate(UserManagement.User user, bool isCreating)
         {
             var validationMessage = new List<string>();
