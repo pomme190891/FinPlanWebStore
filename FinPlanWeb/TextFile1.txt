@@ -1,0 +1,15 @@
+﻿Main Functionalities:
+
+1. Login and Logout
+2. Display products
+3. Add products to cart
+4. Pay by Direct Debit
+5. Pay by Paypal
+6. Administrative Area
+
+
+
+-- Need to do --
+
+1. Reset Password
+2. Tidying up user management area

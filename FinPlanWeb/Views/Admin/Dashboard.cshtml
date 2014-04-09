@@ -12,6 +12,8 @@
         });
     });
 </script>
+
+
 <div style="padding-top: 25px;">
     <div class="well">
         <ul class="nav nav-tabs" id="adminTab">
@@ -78,7 +80,7 @@
                                     <td class="col-md-3">
                                         <button type="button" class="btn btn-primary btn-xs" data-bind="click: $root.edit">Edit</button>
                                         <button type="button" class="btn btn-danger btn-xs" data-bind="    click: $root.delete">Delete</button>
-                                        <button type="button" class="btn btn-success btn-xs" data-toggle="modal" data-target="#changePasswordModal">Change Password</button>
+                                        <button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#changePasswordModal">Change Password</button>
                                     </td>
                                 </tr>
                                 <!-- /ko -->
@@ -119,7 +121,7 @@
     </div>
 
 
-    <!-- Modal -->
+    <!-- New User Modal -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -128,12 +130,50 @@
                     <h4 class="modal-title" id="myModalLabel">Create a new user</h4>
                 </div>
                 <div class="modal-body">
-                   
+                    <div class="form-group">
+                        <label class="control-label">Username</label>
+                        <input type="text" class="form-control" name="userName" placeholder="userName" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">New Password</label>
+                        <input type="password" class="form-control" name="password" placeholder="Password" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Confirm New Password</label>
+                        <input type="password" class="form-control" name="confirmPassword" placeholder="Retype Password" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Firstname</label>
+                        <input type="text" class="form-control" name="firstName" placeholder="firstName" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Surname</label>
+                        <input type="text" class="form-control" name="surName" placeholder="surName" />
+                    </div>
 
-                    
-                    
-                    
-                    
+                    <div class="form-group">
+                        <label class="control-label">Firm Name</label>
+                        <input type="text" class="form-control" name="firmName" placeholder="firmName" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Email</label>
+                        <input type="text" class="form-control" name="Email" placeholder="Email" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Privileges: </label>
+
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" value="">
+                                Administator
+                            </label>
+                        </div>
+
+
+                    </div>
+
+
+
 
                 </div>
                 <div class="modal-footer">
@@ -143,24 +183,25 @@
             </div>
         </div>
     </div>
-    
-    
+
+
     <!-- Change Password Modal -->
-    <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel">Create a new user</h4>
+                    <h4 class="modal-title" id="changePasswordModalLabel">Change password</h4>
                 </div>
                 <div class="modal-body">
-
-
-
-
-
-
-
+                    <div class="form-group">
+                        <label class="control-label">New Password</label>
+                        <input type="password" class="form-control" name="password" placeholder="Password" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Confirm New Password</label>
+                        <input type="password" class="form-control" name="confirmPassword" placeholder="Retype Password" />
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -212,6 +253,8 @@
             model.userDetails.IsAdmin(data.IsAdmin);
         };
 
+
+
         model.save = function (data) {
             if (model.editting()) {
                 $.post("@Url.Action("UserUpdate")", ko.toJS(data.userDetails), function (result) {
@@ -250,13 +293,32 @@
                 data: { username: data.UserName },
                 dataType: "json",
                 success: function (result) {
-                    debugger;
                     model.users(result.users);
                     alert('Delete Successfully');
                     model.creating(false);
                     model.editting(false);
                 }
             });
+
+        };
+
+
+
+        
+        model.resetPassword = function(data) {
+
+        @*    $.ajax({
+                url: "@Url.Action("ResetPassword")",
+                type: "POST",
+                data: { data: data.userDetails },
+                dataType: "json",
+                success: function (result) {
+                    model.users(result.users);
+                    alert('Password Reset Successfully');
+                    model.creating(false);
+                    model.editting(false);
+                }
+            });*@
 
         };
         
@@ -275,11 +337,79 @@
 
         $('#page-selection').bootpag({
             total: @ViewBag.TotalUsersPage
-            }).on("page", function (event, /* page number here */ num) {
-                $.post("@Url.Action("Paging")", {num:num}, function(users) {
+        }).on("page", function (event, /* page number here */ num) {
+            $.post("@Url.Action("Paging")", {num:num}, function(users) {
                     model.users(users);
                 });
             });
             ko.applyBindings(model, $('#usertable')[0]);
+
+
+
+            $(document).ready(function() {
+                $('#defaultForm').bootstrapValidator({
+                    message: 'This value is not valid',
+                    feedbackIcons: {
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                        username: {
+                            message: 'The username is not valid',
+                            validators: {
+                                notEmpty: {
+                                    message: 'The username is required and can\'t be empty'
+                                },
+                                stringLength: {
+                                    min: 6,
+                                    max: 30,
+                                    message: 'The username must be more than 6 and less than 30 characters long'
+                                },
+                                regexp: {
+                                    regexp: /^[a-zA-Z0-9_\.]+$/,
+                                    message: 'The username can only consist of alphabetical, number, dot and underscore'
+                                }
+                            }
+                        },
+                        email: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The email address is required and can\'t be empty'
+                                },
+                                emailAddress: {
+                                    message: 'The input is not a valid email address'
+                                }
+                            }
+                        },
+                        password: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The password is required and can\'t be empty'
+                                },
+                                identical: {
+                                    field: 'confirmPassword',
+                                    message: 'The password and its confirm are not the same'
+                                }
+                            }
+                        },
+                        confirmPassword: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The confirm password is required and can\'t be empty'
+                                },
+                                identical: {
+                                    field: 'password',
+                                    message: 'The password and its confirm are not the same'
+                                }
+                            }
+                        }
+                    }
+                });
+            });
     </script>
+
+
+
+
 </div>

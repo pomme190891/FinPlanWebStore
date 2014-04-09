@@ -260,6 +260,18 @@ namespace FinPlanWeb.Database
             }
         }
 
+        public static void ResetPassword(User user)
+        {
+            using (var connection = new SqlConnection(GetConnection()))
+            {
+                const string sql = @"UPDATE [dbo].[users] SET [Password] = @p WHERE [Username] = @u";
+                connection.Open();
+                var cmd = new SqlCommand(sql, connection);
+                cmd.Parameters.Add(new SqlParameter("@p", SqlDbType.NVarChar)).Value = user.UserName;
+                cmd.Parameters.Add(new SqlParameter("@u", SqlDbType.NVarChar)).Value = Helpers.SHA1.Encode(user.Password);
+            }
+        }
+
     }
 }
 
