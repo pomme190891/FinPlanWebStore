@@ -67,11 +67,13 @@ namespace FinPlanWeb.Controllers
             var paymentStatus = response.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].PaymentStatus;
             if (paymentStatus == PaymentStatusCodeType.DENIED)
             {
+                //change
                 errors.Add("The payment has been denied by paypal. Please check with your account and try it again.");
                 return PaymentFailed(errors);
             }
             if (paymentStatus == PaymentStatusCodeType.VOIDED || paymentStatus == PaymentStatusCodeType.EXPIRED)
             {
+               //changes
                 errors.Add("The payment has been voided or expired by paypal. Please try again."); 
                 return PaymentFailed(errors);
             }
