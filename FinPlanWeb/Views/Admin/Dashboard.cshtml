@@ -41,12 +41,12 @@
                 <div id="usertable">
                     <h4>User Management</h4>
                     <p>
-                        <button type="button" class="btn btn-primary " data-bind="click: addNewUser">
+                        <button type="button" class="btn btn-primary " >
                             New User
                             <i class="glyphicon glyphicon-user"></i>
                         </button>
                         &nbsp;&nbsp;&nbsp;
-                        <button type="button" class="btn btn btn-success " data-toggle="modal" data-target="#myModal">
+                        <button type="button" class="btn btn btn-success" data-bind="click: addNewUser">
                             Refresh
                             <i class="glyphicon glyphicon-refresh"></i>
                         </button>
@@ -84,14 +84,8 @@
                                     </td>
                                 </tr>
                                 <!-- /ko -->
-                                <!-- ko if: editting() || creating() || deleting() -->
+                                <!-- ko if: editting() || deleting() -->
                                 <tr>
-                                    <!-- ko if:creating() -->
-                                    <td class="col-md-1">
-                                        <input type="text" data-bind="value: userDetails.UserName, disable: editting()" /></td>
-                                    <td class="col-md-1">
-                                        <input type="text" data-bind="value: userDetails.Password, disable: editting()" /></td>
-                                    <!-- /ko -->
                                     <!-- ko if:editting() -->
                                     <td class="col-md-1" data-bind="text: userDetails.UserName"></td>
                                     <td class="col-md-1">********</td>
@@ -114,75 +108,70 @@
                         </table>
                         <div id="page-selection"></div>
                     </div>
+                    <!-- New User Modal -->
+                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title" id="myModalLabel">Create a new user</h4>
+                                </div>
+                                <div class="alert alert-danger" data-bind="html: validationMessageCreate, visible: validationMessageCreate"></div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label class="control-label">Username</label>
+                                        <input type="text" class="form-control" name="userName" placeholder="userName" data-bind="value:userDetails.UserName" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">New Password</label>
+                                        <input type="password" class="form-control" name="password" placeholder="Password" data-bind="value:userDetails.Password" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Confirm New Password</label>
+                                        <input type="password" class="form-control" name="confirmPassword" placeholder="Retype Password" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Firstname</label>
+                                        <input type="text" class="form-control" name="firstName" placeholder="firstName" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Surname</label>
+                                        <input type="text" class="form-control" name="surName" placeholder="surName" />
+                                    </div>
 
-                </div>
-            </div>
-        </div>
-    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Firm Name</label>
+                                        <input type="text" class="form-control" name="firmName" placeholder="firmName" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Email</label>
+                                        <input type="text" class="form-control" name="Email" placeholder="Email" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Privileges: </label>
 
-
-    <!-- New User Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel">Create a new user</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label class="control-label">Username</label>
-                        <input type="text" class="form-control" name="userName" placeholder="userName" />
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">New Password</label>
-                        <input type="password" class="form-control" name="password" placeholder="Password" />
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Confirm New Password</label>
-                        <input type="password" class="form-control" name="confirmPassword" placeholder="Retype Password" />
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Firstname</label>
-                        <input type="text" class="form-control" name="firstName" placeholder="firstName" />
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Surname</label>
-                        <input type="text" class="form-control" name="surName" placeholder="surName" />
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label">Firm Name</label>
-                        <input type="text" class="form-control" name="firmName" placeholder="firmName" />
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Email</label>
-                        <input type="text" class="form-control" name="Email" placeholder="Email" />
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Privileges: </label>
-
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" value="">
-                                Administator
-                            </label>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" value="">
+                                                Administator
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary" data-bind="click:save">Save changes</button>
+                                </div>
+                            </div>
                         </div>
-
-
                     </div>
-
-
-
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
                 </div>
             </div>
         </div>
     </div>
+
+
+    
 
 
     <!-- Change Password Modal -->
@@ -229,7 +218,8 @@
             editting: ko.observable(false),
             creating: ko.observable(false),
             deleting: ko.observable(false),
-            validationMessage: ko.observable(null)
+            validationMessage: ko.observable(null),
+            validationMessageCreate : ko.observable(null)
         };
 
         model.addNewUser = function () {
@@ -237,7 +227,7 @@
             model.creating(true);
             model.editting(false);
             model.deleting(false);
-
+            $('#myModal').modal('show');
         };
 
         model.edit = function (data) {
@@ -272,7 +262,7 @@
             } else {
                 $.post("@Url.Action("AddUser")", ko.toJS(data.userDetails), function (result) {
                     if (!result.passed) {
-                        model.validationMessage(result.validationMessage);
+                        model.validationMessageCreate(result.validationMessage);
                     } else {
                         model.users(result.users);
                         alert('Save successfully.');
@@ -333,6 +323,7 @@
             model.userDetails.Email("");
             model.userDetails.IsAdmin("");
             model.validationMessage(null);
+            model.validationMessageCreate(null);
         }
 
         $('#page-selection').bootpag({
@@ -347,7 +338,8 @@
 
 
             $(document).ready(function() {
-                $('#defaultForm').bootstrapValidator({
+                debugger;
+                $('#myModal').bootstrapValidator({
                     message: 'This value is not valid',
                     feedbackIcons: {
                         valid: 'glyphicon glyphicon-ok',

@@ -337,6 +337,8 @@
     vm.continueOrder = function() {
         if (vm.checkout.PaymentInfo.IsDirectDebit()) {
             window.location.href = "@Url.Action("OrderByDirectDebit")";
+        } else {
+            window.location.href = "@Url.Action("Index","Payment")";
         }
     };
 

@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "Order Failed";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+
+@model FinPlanWeb.Controllers.TransacDetails
+
+<div class="jumbotron">
+    <h2>Opps! Something went wrong</h2>
+    <p> @{ var index = 1; foreach (var error in Model.Errors)
+     {
+         var message = string.Format("{0}) {1}", @index, @error); <text>@message</text> <br /> index++;
+     } } </p>
+
+</div>

@@ -49,6 +49,9 @@
     <Reference Include="PayPalCoreSDK">
       <HintPath>..\packages\PayPalCoreSDK.1.4.2\lib\net45\PayPalCoreSDK.dll</HintPath>
     </Reference>
+    <Reference Include="PayPalMerchantSDK">
+      <HintPath>..\packages\PayPalMerchantSDK.2.7.109\lib\PayPalMerchantSDK.dll</HintPath>
+    </Reference>
     <Reference Include="RestApiSDK">
       <HintPath>..\packages\RestApiSDK.0.7.6\lib\net45\RestApiSDK.dll</HintPath>
     </Reference>
@@ -147,9 +150,11 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CheckOutController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\ShoppingCartController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Database\PayPalManagement.cs" />
     <Compile Include="Database\ProductManagement.cs" />
     <Compile Include="Database\UserManagement.cs" />
     <Compile Include="DTOs\UserLoginDTO.cs" />
@@ -203,8 +208,10 @@
     <Content Include="Scripts\bootpag.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\bootstrapValidator.js" />
     <Content Include="Scripts\common.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery-1.10.2.min.js" />
     <Content Include="Scripts\jquery-1.8.2.js" />
     <Content Include="Scripts\jquery-1.8.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -245,6 +252,9 @@
     <Content Include="Views\Admin\Dashboard.cshtml" />
     <Content Include="Views\CheckOut\CheckOut.cshtml" />
     <Content Include="Views\CheckOut\OrderByDirectDebit.cshtml" />
+    <Content Include="Views\Payment\PaymentCancellation.cshtml" />
+    <Content Include="Views\Payment\PaymentSuccess.cshtml" />
+    <Content Include="Views\Payment\PaymentFailed.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ClassLibrary1\Helpers.csproj">
