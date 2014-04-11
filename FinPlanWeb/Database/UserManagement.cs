@@ -201,7 +201,7 @@ namespace FinPlanWeb.Database
                     Connection = con,
                     CommandType = CommandType.Text,
                     CommandText =
-                        "INSERT INTO [dbo].[users](Username, Firstname, Surname, Firm, Password, RegDate, Email, isAdmin) VALUES (@Username, @Firstname, @Surname, @Firmname, @Password, @RegDate, @Email, @IsAdmin)"
+                        "INSERT INTO [dbo].[users](Username, Firstname, Surname, Firm, Password, RegDate, Email, isAdmin, deleted) VALUES (@Username, @Firstname, @Surname, @Firmname, @Password, @RegDate, @Email, @IsAdmin, @d)"
                 };
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("@Username", user.UserName);
@@ -212,6 +212,7 @@ namespace FinPlanWeb.Database
                 cmd.Parameters.AddWithValue("@RegDate", DateTime.Now);
                 cmd.Parameters.AddWithValue("@Email", user.Email);
                 cmd.Parameters.AddWithValue("@IsAdmin", user.IsAdmin);
+                cmd.Parameters.AddWithValue("@d", '0');
 
                 if (con.State != ConnectionState.Closed) return;
                 con.Open();

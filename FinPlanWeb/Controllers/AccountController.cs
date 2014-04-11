@@ -59,11 +59,11 @@ namespace FinPlanWeb.Controllers
                     {
                         FormsAuthentication.SetAuthCookie(user.Username, user.RememberMe);
                         Session["User"] = new UserLoginDto { Username = user.Username };
-                        return RedirectToAction("AdminPage", "Account");
+                        return RedirectToAction("Dashboard", "Admin");
                     }
                     FormsAuthentication.SetAuthCookie(user.Username, user.RememberMe);
                     Session["User"] = new UserLoginDto { Username = user.Username };
-                    return RedirectToAction("CustomerPage", "Account");
+                    return RedirectToAction("ProductView", "Product");
                 }
                 ModelState.AddModelError("General", "Password is incorrect!");
             }

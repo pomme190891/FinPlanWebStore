@@ -91,17 +91,17 @@
                                     <td class="col-md-1">********</td>
                                     <!-- /ko -->
                                     <td class="col-md-2">
-                                        <input type="text" data-bind="value: userDetails.FirstName" /></td>
+                                        <input type="text"  /></td>
                                     <td class="col-md-2">
-                                        <input type="text" data-bind="value: userDetails.SurName" /></td>
+                                        <input type="text"  /></td>
                                     <td class="col-md-1">
-                                        <input type="text" data-bind="value: userDetails.FirmName" /></td>
+                                        <input type="text"  /></td>
                                     <td class="col-md-2">
-                                        <input type="text" data-bind="value: userDetails.Email" /></td>
+                                        <input type="text"  /></td>
                                     <td class="col-md-1">
-                                        <input type="checkbox" data-bind="checked: userDetails.IsAdmin" /></td>
+                                        <input type="checkbox"  /></td>
                                     <td class="col-md-2">
-                                        <button type="button" class="btn btn-primary btn-xs" data-bind="click: save">Save</button></td>
+                                        <button type="button" class="btn btn-primary btn-xs">Save</button></td>
                                 </tr>
                                 <!-- /ko -->
                             </tbody>
@@ -132,27 +132,27 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">Firstname</label>
-                                        <input type="text" class="form-control" name="firstName" placeholder="firstName" />
+                                        <input type="text" class="form-control" name="firstName" placeholder="firstName" data-bind="value: userDetails.FirstName" />
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">Surname</label>
-                                        <input type="text" class="form-control" name="surName" placeholder="surName" />
+                                        <input type="text" class="form-control" name="surName" placeholder="surName" data-bind="value: userDetails.SurName" />
                                     </div>
 
                                     <div class="form-group">
                                         <label class="control-label">Firm Name</label>
-                                        <input type="text" class="form-control" name="firmName" placeholder="firmName" />
+                                        <input type="text" class="form-control" name="firmName" placeholder="firmName" data-bind="value: userDetails.FirmName" />
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">Email</label>
-                                        <input type="text" class="form-control" name="Email" placeholder="Email" />
+                                        <input type="text" class="form-control" name="Email" placeholder="Email" data-bind="value: userDetails.Email" />
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">Privileges: </label>
 
                                         <div class="checkbox">
                                             <label>
-                                                <input type="checkbox" value="">
+                                                <input type="checkbox" data-bind="checked: userDetails.IsAdmin">
                                                 Administator
                                             </label>
                                         </div>
