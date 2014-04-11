@@ -154,5 +154,9 @@ namespace FinPlanWeb.Controllers
             return validationMessage;
         }
 
+        public ActionResult ResetPassword(UserManagement.User user)
+        {
+
+        }
     }
 }
