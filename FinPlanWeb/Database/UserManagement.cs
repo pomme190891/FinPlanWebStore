@@ -24,6 +24,7 @@ namespace FinPlanWeb.Database
             public DateTime? LastLogin { get; set; }
             public string IpLog { get; set; }
             public DateTime? ModifiedDate { get; set; }
+            public bool IsDeleted { get; set; }
         }
 
 
@@ -67,13 +68,13 @@ namespace FinPlanWeb.Database
 
                 const string sql = @"SELECT [Username] FROM [dbo].[users] WHERE [Username] = @u AND [Password] = @p";
                 const string sql2 = @"UPDATE Users SET LastLogin = GETDATE() WHERE [Username] = @u AND [Password] =@p";
-                //const string sql3 = @"UPDATE [dbo].[users] SET iplog = @ip WHERE [Username] = @u AND [Password] =@p";
+                const string sql3 = @"UPDATE [dbo].[users] SET iplog = @ip WHERE [Username] = @u AND [Password] =@p";
 
 
                 var cmd = new SqlCommand(sql, connection);
                 var cmd2 = new SqlCommand(sql2, connection);
-                //var cmd3 = new SqlCommand(sql3, connection);
-                
+                var cmd3 = new SqlCommand(sql3, connection);
+
                 connection.Open();
                 cmd.Parameters
 
@@ -88,13 +89,13 @@ namespace FinPlanWeb.Database
                 cmd2.Parameters
                           .Add(new SqlParameter("@p", SqlDbType.NVarChar))
                           .Value = Helpers.SHA1.Encode(password);
-                //cmd3.Parameters
-                //          .Add(new SqlParameter("@u", SqlDbType.NVarChar))
-                //          .Value = username;
-                //cmd3.Parameters
-                //          .Add(new SqlParameter("@p", SqlDbType.NVarChar))
-                //          .Value = Helpers.SHA1.Encode(password);
-                //cmd3.Parameters.AddWithValue("@ip", GetIp());
+                cmd3.Parameters
+                         .Add(new SqlParameter("@u", SqlDbType.NVarChar))
+                          .Value = username;
+                cmd3.Parameters
+                          .Add(new SqlParameter("@p", SqlDbType.NVarChar))
+                          .Value = Helpers.SHA1.Encode(password);
+                cmd3.Parameters.AddWithValue("@ip", GetIp());
 
 
                 var reader = cmd.ExecuteReader();
@@ -104,7 +105,7 @@ namespace FinPlanWeb.Database
                     reader.Dispose();
                     cmd.Dispose();
                     cmd2.ExecuteNonQuery();
-                    //cmd3.ExecuteNonQuery();
+                    cmd3.ExecuteNonQuery();
                     return true;
                 }
                 reader.Dispose();
@@ -151,7 +152,7 @@ namespace FinPlanWeb.Database
         /// 
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<User> GetUserList()
+        public static IEnumerable<User> GetValidUserList()
         {
             var users = new List<User>();
             using (var connection = new SqlConnection(GetConnection()))
@@ -177,7 +178,8 @@ namespace FinPlanWeb.Database
                             IsAdmin = reader.GetBoolean(8),
                             LastLogin = reader.IsDBNull(9) ? null : (DateTime?)reader.GetDateTime(9),
                             IpLog = reader.GetValue(10).ToString(),
-                            ModifiedDate = reader.IsDBNull(11) ? null : (DateTime?)reader.GetDateTime(11)
+                            ModifiedDate = reader.IsDBNull(11) ? null : (DateTime?)reader.GetDateTime(11),
+                            IsDeleted = reader.GetBoolean(12)
                         };
 
                         users.Add(user);
@@ -188,6 +190,47 @@ namespace FinPlanWeb.Database
                 return users;
             }
         }
+
+
+        public static IEnumerable<User> GetAllUserList()
+        {
+            var users = new List<User>();
+            using (var connection = new SqlConnection(GetConnection()))
+            {
+                const string sql = @"SELECT * FROM [dbo].[users]";
+                var cmd = new SqlCommand(sql, connection);
+                connection.Open();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var user = new User
+                        {
+                            Id = reader.GetInt32(0),
+                            UserName = reader.GetString(1),
+                            FirstName = reader.GetString(2),
+                            SurName = reader.GetString(3),
+                            FirmName = reader.GetString(4),
+                            Password = reader.GetString(5),
+                            AddedDate = reader.GetDateTime(6),
+                            Email = reader.GetString(7),
+                            IsAdmin = reader.GetBoolean(8),
+                            LastLogin = reader.IsDBNull(9) ? null : (DateTime?)reader.GetDateTime(9),
+                            IpLog = reader.GetValue(10).ToString(),
+                            ModifiedDate = reader.IsDBNull(11) ? null : (DateTime?)reader.GetDateTime(11),
+                            IsDeleted = reader.GetBoolean(12)
+                        };
+
+                        users.Add(user);
+                    }
+
+                }
+
+                return users;
+            }
+        }
+
 
 
         public static void AddUser(User user)
@@ -273,6 +316,29 @@ namespace FinPlanWeb.Database
             }
         }
 
+        public static bool IsValidUsername(string username)
+        {
+            using (var connection = new SqlConnection(GetConnection()))
+            {
+                const string sql = @"SELECT [Username] FROM [dbo].[users] WHERE [Username] = @u";
+                var cmd = new SqlCommand(sql, connection);
+                connection.Open();
+                cmd.Parameters
+                          .Add(new SqlParameter("@u", SqlDbType.NVarChar))
+                          .Value = username;
+                var reader = cmd.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    reader.Dispose();
+                    cmd.Dispose();
+                    return true;
+                }
+                reader.Dispose();
+                cmd.Dispose();
+                return false;
+            }
+
+        }
     }
 }
 

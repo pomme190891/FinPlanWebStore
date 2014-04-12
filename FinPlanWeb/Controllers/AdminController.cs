@@ -8,17 +8,34 @@ using FinPlanWeb.Database;
 
 namespace FinPlanWeb.Controllers
 {
-    public class AddUserDto
+    public class EditUserDTO
     {
         public int Id { get; set; }
         public string UserName { get; set; }
         public string FirstName { get; set; }
         public string SurName { get; set; }
         public string FirmName { get; set; }
-        public DateTime AddedDate { get; set; }
+        public string Password { get; set; }
         public string Email { get; set; }
         public bool IsAdmin { get; set; }
+        public string ConfirmPassword { get; set; }
+
+        public UserManagement.User ToUser()
+        {
+            return new UserManagement.User
+            {
+                Id = Id,
+                UserName = UserName,
+                FirstName = FirstName,
+                SurName = SurName,
+                FirmName = FirmName,
+                Password = Password,
+                Email = Email,
+                IsAdmin = IsAdmin
+            };
+        }
     }
+
     public class AdminController : BaseController
     {
         //
@@ -33,7 +50,7 @@ namespace FinPlanWeb.Controllers
 
         public ActionResult Paging(int num)
         {
-            var users = ApplyPaging(UserManagement.GetUserList(), num);
+            var users = ApplyPaging(UserManagement.GetAllUserList(), num);
             return Json(users, JsonRequestBehavior.AllowGet);
         }
 
@@ -45,25 +62,24 @@ namespace FinPlanWeb.Controllers
 
         public ActionResult Dashboard()
         {
-            var allUsers = UserManagement.GetUserList();
+            var allUsers = UserManagement.GetAllUserList();
             var filteredUsers = ApplyPaging(allUsers, 1);
             ViewBag.Users = new JavaScriptSerializer().Serialize(filteredUsers);
             ViewBag.TotalUsersPage = (int)Math.Ceiling(((double)allUsers.Count() / (double)pageSize));
             return View();
         }
 
-
-        public ActionResult AddUser(UserManagement.User user)
+        public ActionResult AddUser(EditUserDTO user)
         {
             var validationMessage = Validate(user, true);
             if (!validationMessage.Any())
             {
-                UserManagement.AddUser(user);
+                UserManagement.AddUser(user.ToUser());
             }
 
             return Json(new
             {
-                users = UserManagement.GetUserList(),
+                users = UserManagement.GetAllUserList(),
                 passed = !validationMessage.Any(),
                 validationMessage = string.Join("</br>", validationMessage)
             });
@@ -74,17 +90,17 @@ namespace FinPlanWeb.Controllers
             return View();
         }
 
-        public ActionResult UserUpdate(UserManagement.User user)
+        public ActionResult UserUpdate(EditUserDTO user)
         {
             var validationMessage = Validate(user, false);
             if (!validationMessage.Any())
             {
-                UserManagement.UpdateUser(user);
+                UserManagement.UpdateUser(user.ToUser());
             }
 
             return Json(new
             {
-                users = UserManagement.GetUserList(),
+                users = UserManagement.GetAllUserList(),
                 passed = !validationMessage.Any(),
                 validationMessage = string.Join("<br/>", validationMessage)
             });
@@ -96,11 +112,11 @@ namespace FinPlanWeb.Controllers
             UserManagement.DeleteUser(username);
             return Json(new
             {
-                users = UserManagement.GetUserList()   
+                users = UserManagement.GetAllUserList()
             });
         }
 
-        public List<string> Validate(UserManagement.User user, bool isCreating)
+        public List<string> Validate(EditUserDTO user, bool isCreating)
         {
             var validationMessage = new List<string>();
 
@@ -109,9 +125,23 @@ namespace FinPlanWeb.Controllers
                 validationMessage.Add("Username is empty.");
             }
 
+            if (isCreating && !string.IsNullOrEmpty(user.UserName))
+            {
+                if (UserManagement.IsValidUsername(user.UserName))
+                {
+                    validationMessage.Add("Username already exists in the database.");
+                }
+            }
+
+            if (isCreating && !string.IsNullOrEmpty(user.Password) && (user.ConfirmPassword != user.Password))
+            {
+                validationMessage.Add("Confirm Password does not match with the password.");
+
+            }
+
             if (isCreating && string.IsNullOrEmpty(user.Password))
             {
-                validationMessage.Add("Password is empty."); 
+                validationMessage.Add("Password is empty.");
             }
 
             if (string.IsNullOrEmpty(user.FirstName))
@@ -156,7 +186,7 @@ namespace FinPlanWeb.Controllers
 
         public ActionResult ResetPassword(UserManagement.User user)
         {
-
+            return null;
         }
     }
 }

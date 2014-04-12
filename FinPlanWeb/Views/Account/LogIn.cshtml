@@ -26,13 +26,13 @@
                 <div class="panel-body" style="padding-top: 30px">
                
                     <div class="form-group">
-                        @Html.TextBoxFor(u => u.Username, new { @class = "form-control input-lg", placeholder = "Email Address" })
+                        @Html.TextBoxFor(u => u.Username, new { @class = "form-control input-lg", placeholder = "Username" })
                         @Html.ValidationMessageFor(u => u.Username, null, new { @class = "help-block" })
 
                     </div>
                     <div class="form-group">
                         @Html.PasswordFor(u => u.Password, new { @class = "form-control input-lg", placeholder = "Password" })
-                        @Html.ValidationMessageFor(u => u.Password, null, new{ @class = "help-block"})
+                        @Html.ValidationMessageFor(u => u.Password, null, new{ @class = "help-block error" })
 
                     </div>
                     <div style="float: left; font-size: 100%; position: relative; top: -10px;"><a href="http://help.bluecoatsoftware.com" id="help" data-toggle="tooltip" data-placement="left" title="Please visit: help.bluecoatsoftware.com">Need Help?</a></div>

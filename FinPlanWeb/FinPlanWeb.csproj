@@ -154,6 +154,7 @@
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\ShoppingCartController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Database\OrderManagement.cs" />
     <Compile Include="Database\PayPalManagement.cs" />
     <Compile Include="Database\ProductManagement.cs" />
     <Compile Include="Database\UserManagement.cs" />

@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Linq;
+using System.Web.Mvc;
 using System.Web.Security;
 using FinPlanWeb.Database;
 using FinPlanWeb.DTOs;
@@ -58,14 +59,22 @@ namespace FinPlanWeb.Controllers
                     if (UserManagement.IsAdmin(user.Username, user.Password))
                     {
                         FormsAuthentication.SetAuthCookie(user.Username, user.RememberMe);
-                        Session["User"] = new UserLoginDto { Username = user.Username };
                         return RedirectToAction("Dashboard", "Admin");
                     }
+                    var validUser = UserManagement.GetValidUserList().Single(x => x.UserName == user.Username);
                     FormsAuthentication.SetAuthCookie(user.Username, user.RememberMe);
-                    Session["User"] = new UserLoginDto { Username = user.Username };
+                    Session["User"] = new UserLoginDto {Username = user.Username, Id = validUser.Id};
                     return RedirectToAction("ProductView", "Product");
                 }
-                ModelState.AddModelError("General", "Password is incorrect!");
+
+                if (!UserManagement.IsValidUsername(user.Username))
+                {
+                    ModelState.AddModelError("Username", "This username cannot be found.");
+                }
+                else
+                {
+                    ModelState.AddModelError("Password", "Password is incorrect!");
+                }
             }
             return View(user);
         }

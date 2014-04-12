@@ -41,7 +41,7 @@
                 <div id="usertable">
                     <h4>User Management</h4>
                     <p>
-                        <button type="button" class="btn btn-primary " >
+                        <button type="button" class="btn btn-primary ">
                             New User
                             <i class="glyphicon glyphicon-user"></i>
                         </button>
@@ -50,6 +50,11 @@
                             Refresh
                             <i class="glyphicon glyphicon-refresh"></i>
                         </button>
+                        <select data-bind="value:filter">
+                            <option value="3">All</option>
+                            <option value="0">Active</option>
+                            <option value="1">Inactive</option>
+                        </select>
                         <button class="btn btn-danger">Archieved Users</button>
                     </p>
                     <div class="alert alert-danger" data-bind="html: validationMessage, visible: validationMessage"></div>
@@ -69,7 +74,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- ko foreach:users -->
+                                <!-- ko foreach:filteredUsers -->
                                 <tr>
                                     <td class="col-md-1" data-bind="text: UserName"></td>
                                     <td class="col-md-1" data-bind="text: FirstName"></td>
@@ -84,51 +89,33 @@
                                     </td>
                                 </tr>
                                 <!-- /ko -->
-                                <!-- ko if: editting() || deleting() -->
-                                <tr>
-                                    <!-- ko if:editting() -->
-                                    <td class="col-md-1" data-bind="text: userDetails.UserName"></td>
-                                    <td class="col-md-1">********</td>
-                                    <!-- /ko -->
-                                    <td class="col-md-2">
-                                        <input type="text"  /></td>
-                                    <td class="col-md-2">
-                                        <input type="text"  /></td>
-                                    <td class="col-md-1">
-                                        <input type="text"  /></td>
-                                    <td class="col-md-2">
-                                        <input type="text"  /></td>
-                                    <td class="col-md-1">
-                                        <input type="checkbox"  /></td>
-                                    <td class="col-md-2">
-                                        <button type="button" class="btn btn-primary btn-xs">Save</button></td>
-                                </tr>
-                                <!-- /ko -->
                             </tbody>
                         </table>
                         <div id="page-selection"></div>
                     </div>
-                    <!-- New User Modal -->
+
+                    <!-- User Modal -->
                     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                    <h4 class="modal-title" id="myModalLabel">Create a new user</h4>
+                                    <h4 class="modal-title" id="myModalLabel" data-bind="text: creating() ? 'Create a new user':'Edit user'"></h4>
                                 </div>
                                 <div class="alert alert-danger" data-bind="html: validationMessageCreate, visible: validationMessageCreate"></div>
                                 <div class="modal-body">
                                     <div class="form-group">
                                         <label class="control-label">Username</label>
-                                        <input type="text" class="form-control" name="userName" placeholder="userName" data-bind="value:userDetails.UserName" />
+                                        <input type="text" class="form-control" name="userName" placeholder="userName" data-bind="value:userDetails.UserName, disable:editting" />
+
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group" data-bind="visible: creating">
                                         <label class="control-label">New Password</label>
                                         <input type="password" class="form-control" name="password" placeholder="Password" data-bind="value:userDetails.Password" />
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group" data-bind="visible: creating">
                                         <label class="control-label">Confirm New Password</label>
-                                        <input type="password" class="form-control" name="confirmPassword" placeholder="Retype Password" />
+                                        <input type="password" class="form-control" name="confirmPassword" placeholder="Retype Password" data-bind="value:userDetails.ConfirmPassword" />
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">Firstname</label>
@@ -171,7 +158,6 @@
     </div>
 
 
-    
 
 
     <!-- Change Password Modal -->
@@ -212,17 +198,19 @@
                 FirmName: ko.observable(),
                 AddedDate: ko.observable(new Date()),
                 Email: ko.observable(),
-                IsAdmin: ko.observable()
+                IsAdmin: ko.observable(),
+                ConfirmPassword : ko.observable()
             },
             users: ko.observableArray(@Html.Raw(@ViewBag.Users)),
             editting: ko.observable(false),
             creating: ko.observable(false),
             deleting: ko.observable(false),
             validationMessage: ko.observable(null),
-            validationMessageCreate : ko.observable(null)
+            validationMessageCreate: ko.observable(null),
+            filter: ko.observable("3")
         };
 
-        model.addNewUser = function () {
+        model.addNewUser = function() {
             model.clearUserDetails();
             model.creating(true);
             model.editting(false);
@@ -230,7 +218,21 @@
             $('#myModal').modal('show');
         };
 
-        model.edit = function (data) {
+        model.filteredUsers = ko.computed(function() {
+            var filterValue = model.filter();
+          
+            if (filterValue == "3") {
+                return model.users();
+            }
+
+            var isDeleted = filterValue == "1" ? true : false;
+
+            return ko.utils.arrayFilter(model.users(), function(user) {
+                return user.IsDeleted == isDeleted;
+            });
+        });
+
+        model.edit = function(data) {
             model.creating(false);
             model.editting(true);
             model.validationMessage(null);
@@ -241,11 +243,11 @@
             model.userDetails.FirmName(data.FirmName);
             model.userDetails.Email(data.Email);
             model.userDetails.IsAdmin(data.IsAdmin);
+            $('#myModal').modal('show');
         };
 
 
-
-        model.save = function (data) {
+        model.save = function(data) {
             if (model.editting()) {
                 $.post("@Url.Action("UserUpdate")", ko.toJS(data.userDetails), function (result) {
                     if (!result.passed) {
@@ -257,10 +259,11 @@
                         model.editting(false);
                         model.deleting(false);
                         model.clearUserDetails();
+                        $('#myModal').modal('hide');
                     }
                 });
             } else {
-                $.post("@Url.Action("AddUser")", ko.toJS(data.userDetails), function (result) {
+                $.post("@Url.Action("AddUser")",ko.toJS(data.userDetails), function (result) {
                     if (!result.passed) {
                         model.validationMessageCreate(result.validationMessage);
                     } else {
@@ -270,6 +273,7 @@
                         model.editting(false);
                         model.deleting(false);
                         model.clearUserDetails();
+                        $('#myModal').modal('hide');
                     }
                 });
             }
@@ -312,8 +316,7 @@
 
         };
         
-
-
+        
         model.clearUserDetails = function () {
             model.userDetails.UserName("");
             model.userDetails.Password("");
@@ -324,84 +327,83 @@
             model.userDetails.IsAdmin("");
             model.validationMessage(null);
             model.validationMessageCreate(null);
+            model.userDetails.ConfirmPassword("");
         }
 
         $('#page-selection').bootpag({
             total: @ViewBag.TotalUsersPage
-        }).on("page", function (event, /* page number here */ num) {
-            $.post("@Url.Action("Paging")", {num:num}, function(users) {
-                    model.users(users);
-                });
+            }).on("page", function (event, /* page number here */ num) {
+                $.post("@Url.Action("Paging")", {num:num}, function(users) {
+                model.users(users);
             });
-            ko.applyBindings(model, $('#usertable')[0]);
+        });
+        ko.applyBindings(model, $('#usertable')[0]);
 
 
 
-            $(document).ready(function() {
-                debugger;
-                $('#myModal').bootstrapValidator({
-                    message: 'This value is not valid',
-                    feedbackIcons: {
-                        valid: 'glyphicon glyphicon-ok',
-                        invalid: 'glyphicon glyphicon-remove',
-                        validating: 'glyphicon glyphicon-refresh'
+        $(document).ready(function() {
+                
+            $('#myModal').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    username: {
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {
+                                message: 'The username is required and can\'t be empty'
+                            },
+                            stringLength: {
+                                min: 6,
+                                max: 30,
+                                message: 'The username must be more than 6 and less than 30 characters long'
+                            },
+                            regexp: {
+                                regexp: /^[a-zA-Z0-9_\.]+$/,
+                                message: 'The username can only consist of alphabetical, number, dot and underscore'
+                            }
+                        }
                     },
-                    fields: {
-                        username: {
-                            message: 'The username is not valid',
-                            validators: {
-                                notEmpty: {
-                                    message: 'The username is required and can\'t be empty'
-                                },
-                                stringLength: {
-                                    min: 6,
-                                    max: 30,
-                                    message: 'The username must be more than 6 and less than 30 characters long'
-                                },
-                                regexp: {
-                                    regexp: /^[a-zA-Z0-9_\.]+$/,
-                                    message: 'The username can only consist of alphabetical, number, dot and underscore'
-                                }
+                    email: {
+                        validators: {
+                            notEmpty: {
+                                message: 'The email address is required and can\'t be empty'
+                            },
+                            emailAddress: {
+                                message: 'The input is not a valid email address'
                             }
-                        },
-                        email: {
-                            validators: {
-                                notEmpty: {
-                                    message: 'The email address is required and can\'t be empty'
-                                },
-                                emailAddress: {
-                                    message: 'The input is not a valid email address'
-                                }
+                        }
+                    },
+                    password: {
+                        validators: {
+                            notEmpty: {
+                                message: 'The password is required and can\'t be empty'
+                            },
+                            identical: {
+                                field: 'confirmPassword',
+                                message: 'The password and its confirm are not the same'
                             }
-                        },
-                        password: {
-                            validators: {
-                                notEmpty: {
-                                    message: 'The password is required and can\'t be empty'
-                                },
-                                identical: {
-                                    field: 'confirmPassword',
-                                    message: 'The password and its confirm are not the same'
-                                }
-                            }
-                        },
-                        confirmPassword: {
-                            validators: {
-                                notEmpty: {
-                                    message: 'The confirm password is required and can\'t be empty'
-                                },
-                                identical: {
-                                    field: 'password',
-                                    message: 'The password and its confirm are not the same'
-                                }
+                        }
+                    },
+                    confirmPassword: {
+                        validators: {
+                            notEmpty: {
+                                message: 'The confirm password is required and can\'t be empty'
+                            },
+                            identical: {
+                                field: 'password',
+                                message: 'The password and its confirm are not the same'
                             }
                         }
                     }
-                });
+                }
             });
+        });
     </script>
-
-
 
 
 </div>
