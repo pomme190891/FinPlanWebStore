@@ -9,6 +9,8 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Script.Serialization;
 using System.Web.WebPages;
+using FinPlanWeb.Database;
+using FinPlanWeb.DTOs;
 using FinPlanWeb.Models;
 
 namespace FinPlanWeb.Controllers
@@ -42,12 +44,14 @@ namespace FinPlanWeb.Controllers
         public ActionResult OrderByDirectDebit()
         {
             var checkout = TempData["checkoutInfo"] as Checkout;
+            var cart = Session["Cart"] as List<CartItem>;
+            var user = Session["User"] as UserLoginDto;
             if (checkout == null)
             {
                 throw new InvalidOperationException("You need to validate checkout before ordering by direct debit.");
             }
             
-            //Save = insert to database , select the ID out as confirmationId
+            OrderManagement.RecordDirectDebitTransaction(checkout, cart, user.Id );
 
 
             SendEmail(checkout);
@@ -67,7 +71,7 @@ namespace FinPlanWeb.Controllers
             client.Send(mail);
         }
 
-        private IList<string> Validate(Checkout checkout)
+        private IEnumerable<string> Validate(Checkout checkout)
         {
             var validationMessage = new List<string>();
 

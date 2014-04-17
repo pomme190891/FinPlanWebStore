@@ -154,6 +154,7 @@
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\ShoppingCartController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Database\OrderManagement.cs" />
     <Compile Include="Database\PayPalManagement.cs" />
     <Compile Include="Database\ProductManagement.cs" />
     <Compile Include="Database\UserManagement.cs" />
@@ -227,7 +228,9 @@
     <Content Include="Scripts\knockout.mapping.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\scrolling-nav.js" />
+    <Content Include="Scripts\bootstrapValidator.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="TextFile1.txt" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

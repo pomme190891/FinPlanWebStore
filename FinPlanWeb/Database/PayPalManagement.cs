@@ -13,7 +13,7 @@ namespace FinPlanWeb.Database
     public class PayPalManagement
     {
 
-        public HttpResponseBase HttpResponse { get; set; }
+        public HttpResponseBase WebResponse { get; set; }
         public Checkout Checkout { get; set; }
         public string CancelUrl { get; set; }
         public string CheckoutReturnUrl { get; set; }
@@ -33,18 +33,18 @@ namespace FinPlanWeb.Database
                 throw new InvalidOperationException(string.Join("\n", response.Errors.Select(x=>x.LongMessage)));
             }
             var paypalRedirectUrl = string.Format(ConfigurationManager.AppSettings["PayPalRedirectUrl"] + "_express-checkout&token={0}", response.Token);
-            HttpResponse.Redirect(paypalRedirectUrl);
+            WebResponse.Redirect(paypalRedirectUrl);
         }
 
 
         private void PopulateSetCheckoutRequestObject(SetExpressCheckoutRequestType request)
         {
-            var ecDetails = new SetExpressCheckoutRequestDetailsType();
-            ecDetails.SolutionType = SolutionTypeType.SOLE;
-            ecDetails.NoShipping = "1";
-            ecDetails.BuyerEmail = Checkout.BillingInfo.Email;
-            ecDetails.AddressOverride = "0";
-            ecDetails.BillingAddress = new AddressType
+            var requestedDetails = new SetExpressCheckoutRequestDetailsType();
+            requestedDetails.SolutionType = SolutionTypeType.SOLE;
+            requestedDetails.NoShipping = "1";
+            requestedDetails.BuyerEmail = Checkout.BillingInfo.Email;
+            requestedDetails.AddressOverride = "0";
+            requestedDetails.BillingAddress = new AddressType
             {
                 Name = Checkout.BillingInfo.FirstName + " " + Checkout.BillingInfo.SurName,
                 Street1 = Checkout.BillingInfo.FirmName + " " + Checkout.BillingInfo.BuildingName + " " + Checkout.BillingInfo.StreetName,
@@ -52,19 +52,19 @@ namespace FinPlanWeb.Database
                 StateOrProvince = Checkout.BillingInfo.County,
                 PostalCode = Checkout.BillingInfo.PostCode
             };
-            ecDetails.BrandName = "Bluecoat Software";
-            PopulatePaymentDetails(ecDetails);
-            ecDetails.ReturnURL = CheckoutReturnUrl; ecDetails.CancelURL = CancelUrl; request.SetExpressCheckoutRequestDetails = ecDetails;
+            requestedDetails.BrandName = "Bluecoat Software";
+            PopulatePaymentDetails(requestedDetails);
+            requestedDetails.ReturnURL = CheckoutReturnUrl; requestedDetails.CancelURL = CancelUrl; request.SetExpressCheckoutRequestDetails = requestedDetails;
         }
 
 
         private void PopulatePaymentDetails(SetExpressCheckoutRequestDetailsType ecDetails)
         {
 
-            var paymentDetails = new PaymentDetailsType();
-            var itemTotal = 0.0;
+            var paymentInfo = new PaymentDetailsType();
+            var total = 0.0;
             var currency = CurrencyCodeType.GBP;
-            var shipAddress = new AddressType
+            var address = new AddressType
             {
                 Name = Checkout.BillingInfo.FirstName + " " + Checkout.BillingInfo.SurName,
                 Street1 = Checkout.BillingInfo.FirmName + " " + Checkout.BillingInfo.BuildingName + " " + Checkout.BillingInfo.StreetName,
@@ -72,42 +72,42 @@ namespace FinPlanWeb.Database
                 StateOrProvince = Checkout.BillingInfo.County,
                 PostalCode = Checkout.BillingInfo.PostCode
             };
-            paymentDetails.ShipToAddress = shipAddress;
+            paymentInfo.ShipToAddress = address;
 
             foreach (var item in Cart)
             {
-                var itemDetails = new PaymentDetailsItemType();
-                itemDetails.Name = string.Format("{0}", item.Name);
-                itemDetails.Quantity = item.Quantity;
-                itemDetails.Amount = new BasicAmountType(currency, item.UnitPriceInStr);
-                itemTotal += item.TotalPrice;
-                paymentDetails.PaymentDetailsItem.Add(itemDetails);
+                var itemInformation = new PaymentDetailsItemType();
+                itemInformation.Name = string.Format("{0}", item.Name);
+                itemInformation.Quantity = item.Quantity;
+                itemInformation.Amount = new BasicAmountType(currency, item.UnitPriceInStr);
+                total += item.TotalPrice;
+                paymentInfo.PaymentDetailsItem.Add(itemInformation);
             }
 
-            var tax = itemTotal*20/100;
-            paymentDetails.ItemTotal = new BasicAmountType(currency, itemTotal.ToString());
-            paymentDetails.OrderTotal = new BasicAmountType(currency, (itemTotal + tax).ToString());
-            paymentDetails.TaxTotal = new BasicAmountType(currency, (itemTotal * 20/100).ToString());
-            ecDetails.PaymentDetails.Add(paymentDetails);
+            var tax = total*20/100;
+            paymentInfo.ItemTotal = new BasicAmountType(currency, total.ToString());
+            paymentInfo.OrderTotal = new BasicAmountType(currency, (total + tax).ToString());
+            paymentInfo.TaxTotal = new BasicAmountType(currency, (total * 20/100).ToString());
+            ecDetails.PaymentDetails.Add(paymentInfo);
         }
 
         public DoExpressCheckoutPaymentResponseType DoExpressCheckout(HttpResponseBase response, string token)
         {
             var getCheckoutRequest = new GetExpressCheckoutDetailsRequestType();
             getCheckoutRequest.Token = token;
-            var getCheckoutwrapper = new GetExpressCheckoutDetailsReq();
-            getCheckoutwrapper.GetExpressCheckoutDetailsRequest = getCheckoutRequest;
+            var getCheckOutInfo = new GetExpressCheckoutDetailsReq();
+            getCheckOutInfo.GetExpressCheckoutDetailsRequest = getCheckoutRequest;
             var service = new PayPalAPIInterfaceServiceService();
-            var ecResponse = service.GetExpressCheckoutDetails(getCheckoutwrapper);
-            var doECRequest = new DoExpressCheckoutPaymentRequestType(); 
-            var ecRequestDetails = new DoExpressCheckoutPaymentRequestDetailsType(); 
-            doECRequest.DoExpressCheckoutPaymentRequestDetails = ecRequestDetails; 
-            ecRequestDetails.PaymentDetails = ecResponse.GetExpressCheckoutDetailsResponseDetails.PaymentDetails; 
-            ecRequestDetails.Token = token; 
-            ecRequestDetails.PayerID = ecResponse.GetExpressCheckoutDetailsResponseDetails.PayerInfo.PayerID; 
-            ecRequestDetails.PaymentAction = PaymentActionCodeType.SALE; 
+            var getResponse = service.GetExpressCheckoutDetails(getCheckOutInfo);
+            var doRequest = new DoExpressCheckoutPaymentRequestType(); 
+            var requestInfo = new DoExpressCheckoutPaymentRequestDetailsType(); 
+            doRequest.DoExpressCheckoutPaymentRequestDetails = requestInfo; 
+            requestInfo.PaymentDetails = getResponse.GetExpressCheckoutDetailsResponseDetails.PaymentDetails; 
+            requestInfo.Token = token; 
+            requestInfo.PayerID = getResponse.GetExpressCheckoutDetailsResponseDetails.PayerInfo.PayerID; 
+            requestInfo.PaymentAction = PaymentActionCodeType.SALE; 
             var wrapper = new DoExpressCheckoutPaymentReq(); 
-            wrapper.DoExpressCheckoutPaymentRequest = doECRequest; 
+            wrapper.DoExpressCheckoutPaymentRequest = doRequest; 
             return service.DoExpressCheckoutPayment(wrapper);
         }
 

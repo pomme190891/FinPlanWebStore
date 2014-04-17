@@ -69,6 +69,7 @@ namespace FinPlanWeb.Controllers
                 product = ProductManagement.GetProduct(code);
                 cart.Add(new CartItem
                 {
+                    Id = product.Id,
                     Quantity = quantity,
                     Name = product.Name,
                     Code = product.Code,

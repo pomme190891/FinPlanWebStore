@@ -47,10 +47,37 @@ namespace FinPlanWeb.Controllers
             return View();
         }
 
-
-        public ActionResult Paging(int num)
+        public ActionResult Filter(int isInactive)
         {
-            var users = ApplyPaging(UserManagement.GetAllUserList(), num);
+            var list = UserManagement.GetAllUserList();
+            if (isInactive == 1)
+            {
+                list = list.Where(x => x.IsDeleted);
+            }
+            else if (isInactive == 0)
+            {
+                list = list.Where(x => x.IsDeleted == false);
+            }
+            var users = ApplyPaging(list, 1);
+
+            var totalPage = (int)Math.Ceiling(((double)list.Count() / (double)pageSize));
+
+            return Json(new { users, totalPage }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Paging(int num, int isInactive)
+        {
+            var list = UserManagement.GetAllUserList();
+            if (isInactive == 1)
+            {
+                list = list.Where(x => x.IsDeleted);
+            }
+            else if (isInactive == 0)
+            {
+                list = list.Where(x => x.IsDeleted == false);
+            }
+            var users = ApplyPaging(list, num);
+
             return Json(users, JsonRequestBehavior.AllowGet);
         }
 
@@ -71,7 +98,8 @@ namespace FinPlanWeb.Controllers
 
         public ActionResult AddUser(EditUserDTO user)
         {
-            var validationMessage = Validate(user, true);
+            var validationIds = new List<string>();
+            var validationMessage = Validate(user, true, out validationIds);
             if (!validationMessage.Any())
             {
                 UserManagement.AddUser(user.ToUser());
@@ -81,6 +109,7 @@ namespace FinPlanWeb.Controllers
             {
                 users = UserManagement.GetAllUserList(),
                 passed = !validationMessage.Any(),
+                validationIds,
                 validationMessage = string.Join("</br>", validationMessage)
             });
         }
@@ -92,7 +121,8 @@ namespace FinPlanWeb.Controllers
 
         public ActionResult UserUpdate(EditUserDTO user)
         {
-            var validationMessage = Validate(user, false);
+            var validationIds = new List<string>();
+            var validationMessage = Validate(user, false,out validationIds);
             if (!validationMessage.Any())
             {
                 UserManagement.UpdateUser(user.ToUser());
@@ -102,6 +132,7 @@ namespace FinPlanWeb.Controllers
             {
                 users = UserManagement.GetAllUserList(),
                 passed = !validationMessage.Any(),
+                validationIds,
                 validationMessage = string.Join("<br/>", validationMessage)
             });
         }
@@ -116,13 +147,15 @@ namespace FinPlanWeb.Controllers
             });
         }
 
-        public List<string> Validate(EditUserDTO user, bool isCreating)
+        public List<string> Validate(EditUserDTO user, bool isCreating,out List<string> invalidIds)
         {
             var validationMessage = new List<string>();
+            var validationId = new List<string>();
 
             if (isCreating && string.IsNullOrEmpty(user.UserName))
             {
                 validationMessage.Add("Username is empty.");
+                validationId.Add("Username");
             }
 
             if (isCreating && !string.IsNullOrEmpty(user.UserName))
@@ -130,38 +163,45 @@ namespace FinPlanWeb.Controllers
                 if (UserManagement.IsValidUsername(user.UserName))
                 {
                     validationMessage.Add("Username already exists in the database.");
+                    validationId.Add("Username");
                 }
             }
 
             if (isCreating && !string.IsNullOrEmpty(user.Password) && (user.ConfirmPassword != user.Password))
             {
                 validationMessage.Add("Confirm Password does not match with the password.");
+                validationId.Add("ConfirmPassword");
 
             }
 
             if (isCreating && string.IsNullOrEmpty(user.Password))
             {
                 validationMessage.Add("Password is empty.");
+                validationId.Add("Password");
             }
 
             if (string.IsNullOrEmpty(user.FirstName))
             {
                 validationMessage.Add("First Name is empty.");
+                validationId.Add("Firstname");
             }
 
             if (string.IsNullOrEmpty(user.SurName))
             {
                 validationMessage.Add("Surname is empty.");
+                validationId.Add("Surname");
             }
 
             if (string.IsNullOrEmpty(user.FirmName))
             {
                 validationMessage.Add("Firmname is empty.");
+                validationId.Add("Firmname");
             }
 
             if (string.IsNullOrEmpty(user.Email))
             {
                 validationMessage.Add("Email is empty.");
+                validationId.Add("Email");
             }
             else
             {
@@ -170,6 +210,7 @@ namespace FinPlanWeb.Controllers
                 var match = regex.Match(user.Email);
                 if (!match.Success)
                     validationMessage.Add("Invalid email format.");
+                validationId.Add("Email");
             }
 
             if (isCreating && !string.IsNullOrEmpty(user.Password))
@@ -178,9 +219,10 @@ namespace FinPlanWeb.Controllers
                 var match = regex.Match(user.Password);
                 if (!match.Success)
                     validationMessage.Add("Invalid Password. Password must contain at least a digit, a uppercase and a lowercase letter. Mininum 6 characters are required. ");
+                    validationId.Add("Password");
             }
 
-
+            invalidIds = validationId;
             return validationMessage;
         }
 

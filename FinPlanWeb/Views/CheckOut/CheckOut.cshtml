@@ -286,9 +286,10 @@
                 </table>
             </div>
 
-
-
-            <button class="btn btn-success" data-bind="click:continueOrder">Confirm Order</button> <button class="btn btn-danger" data-bind="click: backToEdit ">Back to Edit</button>
+            <label>
+                <input type="checkbox" value="true" data-bind="checked:terms" />Terms and Condition
+            </label>
+            <button class="btn btn-success" data-bind="click:continueOrder,enable:isTermConfirmed" >Confirm Order</button> <button class="btn btn-danger" data-bind="click: backToEdit ">Back to Edit</button>
 
         </div>
 
@@ -302,8 +303,16 @@
         cart: ko.observableArray(@Html.Raw(@ViewBag.Cart)),
         checkout: ko.mapping.fromJS(@Html.Raw(@ViewBag.Checkout)),
         orderConfirmation: ko.observable(false),
-        validationMessage: ko.observable()
+        validationMessage: ko.observable(),
+        terms: ko.observable()
     }
+
+    vm.isTermsConfirmed = ko.computed(function() {
+        if (vm.terms()) {
+            return true;
+        }
+        return false;
+    });
 
     vm.subTotalPrice = ko.computed(function () {
         var totalPrice = 0.00;
