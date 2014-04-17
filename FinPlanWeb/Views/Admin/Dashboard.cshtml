@@ -104,46 +104,48 @@
                                 </div>
                                 <div class="alert alert-danger" data-bind="html: validationMessageCreate, visible: validationMessageCreate"></div>
                                 <div class="modal-body">
-                                    <div class="form-group">
-                                        <label class="control-label">Username</label>
-                                        <input type="text" class="form-control" name="userName" placeholder="userName" data-bind="value:userDetails.UserName, disable:editting" />
+                                    <form id="newuser">
+                                        <div class="form-group">
+                                            <label class="control-label">Username</label>
+                                            <input type="text" class="form-control" name="username" placeholder="Username" data-bind="value:userDetails.UserName, disable:editting" />
 
-                                    </div>
-                                    <div class="form-group" data-bind="visible: creating">
-                                        <label class="control-label">New Password</label>
-                                        <input type="password" class="form-control" name="password" placeholder="Password" data-bind="value:userDetails.Password" />
-                                    </div>
-                                    <div class="form-group" data-bind="visible: creating">
-                                        <label class="control-label">Confirm New Password</label>
-                                        <input type="password" class="form-control" name="confirmPassword" placeholder="Retype Password" data-bind="value:userDetails.ConfirmPassword" />
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label">Firstname</label>
-                                        <input type="text" class="form-control" name="firstName" placeholder="firstName" data-bind="value: userDetails.FirstName" />
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label">Surname</label>
-                                        <input type="text" class="form-control" name="surName" placeholder="surName" data-bind="value: userDetails.SurName" />
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="control-label">Firm Name</label>
-                                        <input type="text" class="form-control" name="firmName" placeholder="firmName" data-bind="value: userDetails.FirmName" />
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label">Email</label>
-                                        <input type="text" class="form-control" name="Email" placeholder="Email" data-bind="value: userDetails.Email" />
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label">Privileges: </label>
-
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox" data-bind="checked: userDetails.IsAdmin">
-                                                Administator
-                                            </label>
                                         </div>
-                                    </div>
+                                        <div class="form-group" data-bind="visible: creating">
+                                            <label class="control-label">New Password</label>
+                                            <input type="password" class="form-control" name="password" placeholder="Password" data-bind="value:userDetails.Password" />
+                                        </div>
+                                        <div class="form-group" data-bind="visible: creating">
+                                            <label class="control-label">Confirm New Password</label>
+                                            <input type="password" class="form-control" name="confirmPassword" placeholder="Retype Password" data-bind="value:userDetails.ConfirmPassword" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Firstname</label>
+                                            <input type="text" class="form-control" name="firstName" placeholder="firstName" data-bind="value: userDetails.FirstName" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Surname</label>
+                                            <input type="text" class="form-control" name="surName" placeholder="surName" data-bind="value: userDetails.SurName" />
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label">Firm Name</label>
+                                            <input type="text" class="form-control" name="firmName" placeholder="firmName" data-bind="value: userDetails.FirmName" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Email</label>
+                                            <input type="text" class="form-control" name="Email" placeholder="Email" data-bind="value: userDetails.Email" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Privileges: </label>
+
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" data-bind="checked: userDetails.IsAdmin">
+                                                    Administator
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -169,14 +171,55 @@
                     <h4 class="modal-title" id="changePasswordModalLabel">Change password</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label class="control-label">New Password</label>
-                        <input type="password" class="form-control" name="password" placeholder="Password" />
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Confirm New Password</label>
-                        <input type="password" class="form-control" name="confirmPassword" placeholder="Retype Password" />
-                    </div>
+
+
+                    <form id="tryitForm" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Full name</label>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" name="firstName" />
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" name="lastName" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Email address</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="email" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Gender</label>
+                            <div class="col-md-6">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="gender" value="male" />
+                                        Male</label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="gender" value="female" />
+                                        Female</label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="gender" value="other" />
+                                        Other</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-3 col-md-8">
+                                <button type="submit" class="btn btn-primary">Say hello</button>
+                            </div>
+                        </div>
+                    </form>
+
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -185,6 +228,91 @@
             </div>
         </div>
     </div>
+
+
+
+    @*    <script type="text/javascript">
+        
+        
+        $("form").validate({
+          
+            showErrors: function(errorMap, errorList) {
+ 
+                // Clean up any tooltips for valid elements
+                $.each(this.validElements(), function (index, element) {
+                    var $element = $(element);
+ 
+                    $element.data("title", "") // Clear the title - there is no error associated anymore
+                        .removeClass("error")
+                        .tooltip("destroy");
+                });
+ 
+                // Create new tooltips for invalid elements
+                $.each(errorList, function (index, error) {
+                    var $element = $(error.element);
+ 
+                    $element.tooltip("destroy") // Destroy any pre-existing tooltip so we can repopulate with new tooltip content
+                        .data("title", error.message)
+                        .addClass("error")
+                        .tooltip(); // Create a new tooltip based on the error messsage we just set in the title
+                });
+            },
+ 
+            submitHandler: function(form) {
+                alert("This is a valid form!");
+            }
+        });
+    </script>*@
+
+
+
+    <script>
+        $(document).ready(function() {
+            $('#tryitForm').bootstrapValidator({
+                fields: {
+                    firstName: {
+                        validators: {
+                            notEmpty: {
+                                message: 'The first name is required and cannot be empty'
+                            }
+                        }
+                    },
+                    lastName: {
+                        validators: {
+                            notEmpty: {
+                                message: 'The last name is required and cannot be empty'
+                            }
+                        }
+                    },
+                    email: {
+                        validators: {
+                            notEmpty: {
+                                message: 'The email address is required'
+                            },
+                            emailAddress: {
+                                message: 'The input is not a valid email address'
+                            }
+                        }
+                    },
+                    gender: {
+                        validators: {
+                            notEmpty: {
+                                message: 'The gender is required'
+                            }
+                        }
+                    }
+                },
+                submitHandler: function(validator, form, submitButton) {
+                    var fullName = [validator.getFieldElements('firstName').val(),
+                                    validator.getFieldElements('lastName').val()].join(' ');
+                    $('#helloModal')
+                        .find('.modal-title').html('Hello ' + fullName).end()
+                        .modal();
+                }
+            });
+        });
+    </script>
+
 
 
 
@@ -301,7 +429,7 @@
         
         model.resetPassword = function(data) {
 
-        @*    $.ajax({
+            @*    $.ajax({
                 url: "@Url.Action("ResetPassword")",
                 type: "POST",
                 data: { data: data.userDetails },
@@ -334,75 +462,11 @@
             total: @ViewBag.TotalUsersPage
             }).on("page", function (event, /* page number here */ num) {
                 $.post("@Url.Action("Paging")", {num:num}, function(users) {
-                model.users(users);
+                    model.users(users);
+                });
             });
-        });
-        ko.applyBindings(model, $('#usertable')[0]);
-
-
-
-        $(document).ready(function() {
-                
-            $('#myModal').bootstrapValidator({
-                message: 'This value is not valid',
-                feedbackIcons: {
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
-                },
-                fields: {
-                    username: {
-                        message: 'The username is not valid',
-                        validators: {
-                            notEmpty: {
-                                message: 'The username is required and can\'t be empty'
-                            },
-                            stringLength: {
-                                min: 6,
-                                max: 30,
-                                message: 'The username must be more than 6 and less than 30 characters long'
-                            },
-                            regexp: {
-                                regexp: /^[a-zA-Z0-9_\.]+$/,
-                                message: 'The username can only consist of alphabetical, number, dot and underscore'
-                            }
-                        }
-                    },
-                    email: {
-                        validators: {
-                            notEmpty: {
-                                message: 'The email address is required and can\'t be empty'
-                            },
-                            emailAddress: {
-                                message: 'The input is not a valid email address'
-                            }
-                        }
-                    },
-                    password: {
-                        validators: {
-                            notEmpty: {
-                                message: 'The password is required and can\'t be empty'
-                            },
-                            identical: {
-                                field: 'confirmPassword',
-                                message: 'The password and its confirm are not the same'
-                            }
-                        }
-                    },
-                    confirmPassword: {
-                        validators: {
-                            notEmpty: {
-                                message: 'The confirm password is required and can\'t be empty'
-                            },
-                            identical: {
-                                field: 'password',
-                                message: 'The password and its confirm are not the same'
-                            }
-                        }
-                    }
-                }
-            });
-        });
+            ko.applyBindings(model, $('#usertable')[0]);
+        
     </script>
 
 
