@@ -11,8 +11,7 @@ namespace FinPlanWeb
             bundles.IgnoreList.Clear();
 
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-1.10.2.js",
-                        "~/Scripts/jquery.easing.min.js"));
+                        "~/Scripts/jquery-1.10.2.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/scrollingnavjs").Include(
                         "~/Scripts/scrolling-nav.js"));

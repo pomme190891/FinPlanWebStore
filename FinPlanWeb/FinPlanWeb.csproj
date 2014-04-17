@@ -258,6 +258,7 @@
     <Content Include="Views\Payment\PaymentCancellation.cshtml" />
     <Content Include="Views\Payment\PaymentSuccess.cshtml" />
     <Content Include="Views\Payment\PaymentFailed.cshtml" />
+    <Content Include="Views\Shared\_Layout2.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ClassLibrary1\Helpers.csproj">

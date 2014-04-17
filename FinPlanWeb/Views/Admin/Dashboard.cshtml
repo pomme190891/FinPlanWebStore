@@ -70,7 +70,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- ko foreach:users -->
+                                <!-- ko foreach:filteredUsers -->
                                 <tr>
                                     <td class="col-md-1" data-bind="text: UserName"></td>
                                     <td class="col-md-1" data-bind="text: FirstName"></td>
@@ -89,6 +89,10 @@
                         </table>
                         <div id="page-selection"></div>
                     </div>
+<<<<<<< HEAD
+=======
+
+>>>>>>> cc439f734990d4c1bb05d32b3702c6e736d1b745
                     <!-- User Modal -->
                     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
@@ -99,6 +103,7 @@
                                 </div>
                                 <div class="alert alert-danger" data-bind="html: validationMessageCreate, visible: validationMessageCreate"></div>
                                 <div class="modal-body">
+<<<<<<< HEAD
                                     <div class="form-group" id="Username">
                                         <label class="control-label">Username</label>
                                         <input type="text" class="form-control" name="Username" placeholder="userName" data-bind="value:userDetails.UserName, disable:editting" />
@@ -134,8 +139,50 @@
                                                 <input type="checkbox" data-bind="checked: userDetails.IsAdmin">
                                                 Administator
                                             </label>
+=======
+                                    <form id="newuser">
+                                        <div class="form-group">
+                                            <label class="control-label">Username</label>
+                                            <input type="text" class="form-control" name="username" placeholder="Username" data-bind="value:userDetails.UserName, disable:editting" />
+
                                         </div>
-                                    </div>
+                                        <div class="form-group" data-bind="visible: creating">
+                                            <label class="control-label">New Password</label>
+                                            <input type="password" class="form-control" name="password" placeholder="Password" data-bind="value:userDetails.Password" />
+                                        </div>
+                                        <div class="form-group" data-bind="visible: creating">
+                                            <label class="control-label">Confirm New Password</label>
+                                            <input type="password" class="form-control" name="confirmPassword" placeholder="Retype Password" data-bind="value:userDetails.ConfirmPassword" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Firstname</label>
+                                            <input type="text" class="form-control" name="firstName" placeholder="firstName" data-bind="value: userDetails.FirstName" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Surname</label>
+                                            <input type="text" class="form-control" name="surName" placeholder="surName" data-bind="value: userDetails.SurName" />
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label">Firm Name</label>
+                                            <input type="text" class="form-control" name="firmName" placeholder="firmName" data-bind="value: userDetails.FirmName" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Email</label>
+                                            <input type="text" class="form-control" name="Email" placeholder="Email" data-bind="value: userDetails.Email" />
+>>>>>>> cc439f734990d4c1bb05d32b3702c6e736d1b745
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Privileges: </label>
+
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" data-bind="checked: userDetails.IsAdmin">
+                                                    Administator
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -150,6 +197,11 @@
     </div>
 
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> cc439f734990d4c1bb05d32b3702c6e736d1b745
     <!-- Change Password Modal -->
     <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -159,14 +211,55 @@
                     <h4 class="modal-title" id="changePasswordModalLabel">Change password</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label class="control-label">New Password</label>
-                        <input type="password" class="form-control" name="password" placeholder="Password" />
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Confirm New Password</label>
-                        <input type="password" class="form-control" name="confirmPassword" placeholder="Retype Password" />
-                    </div>
+
+
+                    <form id="tryitForm" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Full name</label>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" name="firstName" />
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" name="lastName" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Email address</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="email" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Gender</label>
+                            <div class="col-md-6">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="gender" value="male" />
+                                        Male</label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="gender" value="female" />
+                                        Female</label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="gender" value="other" />
+                                        Other</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-3 col-md-8">
+                                <button type="submit" class="btn btn-primary">Say hello</button>
+                            </div>
+                        </div>
+                    </form>
+
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -176,6 +269,96 @@
         </div>
     </div>
 
+<<<<<<< HEAD
+=======
+
+
+    @*    <script type="text/javascript">
+        
+        
+        $("form").validate({
+          
+            showErrors: function(errorMap, errorList) {
+ 
+                // Clean up any tooltips for valid elements
+                $.each(this.validElements(), function (index, element) {
+                    var $element = $(element);
+ 
+                    $element.data("title", "") // Clear the title - there is no error associated anymore
+                        .removeClass("error")
+                        .tooltip("destroy");
+                });
+ 
+                // Create new tooltips for invalid elements
+                $.each(errorList, function (index, error) {
+                    var $element = $(error.element);
+ 
+                    $element.tooltip("destroy") // Destroy any pre-existing tooltip so we can repopulate with new tooltip content
+                        .data("title", error.message)
+                        .addClass("error")
+                        .tooltip(); // Create a new tooltip based on the error messsage we just set in the title
+                });
+            },
+ 
+            submitHandler: function(form) {
+                alert("This is a valid form!");
+            }
+        });
+    </script>*@
+
+
+
+    <script>
+        $(document).ready(function() {
+            $('#tryitForm').bootstrapValidator({
+                fields: {
+                    firstName: {
+                        validators: {
+                            notEmpty: {
+                                message: 'The first name is required and cannot be empty'
+                            }
+                        }
+                    },
+                    lastName: {
+                        validators: {
+                            notEmpty: {
+                                message: 'The last name is required and cannot be empty'
+                            }
+                        }
+                    },
+                    email: {
+                        validators: {
+                            notEmpty: {
+                                message: 'The email address is required'
+                            },
+                            emailAddress: {
+                                message: 'The input is not a valid email address'
+                            }
+                        }
+                    },
+                    gender: {
+                        validators: {
+                            notEmpty: {
+                                message: 'The gender is required'
+                            }
+                        }
+                    }
+                },
+                submitHandler: function(validator, form, submitButton) {
+                    var fullName = [validator.getFieldElements('firstName').val(),
+                                    validator.getFieldElements('lastName').val()].join(' ');
+                    $('#helloModal')
+                        .find('.modal-title').html('Hello ' + fullName).end()
+                        .modal();
+                }
+            });
+        });
+    </script>
+
+
+
+
+>>>>>>> cc439f734990d4c1bb05d32b3702c6e736d1b745
     <script type="text/javascript">
         var model = {
             userDetails: {
@@ -208,7 +391,11 @@
 
         model.filteredUsers = ko.computed(function() {
             var filterValue = model.filter();
+<<<<<<< HEAD
 
+=======
+          
+>>>>>>> cc439f734990d4c1bb05d32b3702c6e736d1b745
             if (filterValue == "3") {
                 return model.users();
             }
@@ -220,6 +407,7 @@
             });
         });
 
+<<<<<<< HEAD
         model.filter.subscribe(function(value) {
             $.ajax({
                 url: "@Url.Action("Filter")",
@@ -239,6 +427,8 @@
             });
         });
 
+=======
+>>>>>>> cc439f734990d4c1bb05d32b3702c6e736d1b745
         model.edit = function(data) {
             model.creating(false);
             model.editting(true);
@@ -330,8 +520,13 @@
             });*@
 
         };
+<<<<<<< HEAD
 
 
+=======
+        
+        
+>>>>>>> cc439f734990d4c1bb05d32b3702c6e736d1b745
         model.clearUserDetails = function () {
             model.userDetails.UserName("");
             model.userDetails.Password("");
@@ -352,6 +547,7 @@
                     model.users(users);
                 });
             });
+<<<<<<< HEAD
         ko.applyBindings(model, $('#usertable')[0]);
 
 
@@ -420,4 +616,11 @@
         });
     </script>
 
+=======
+            ko.applyBindings(model, $('#usertable')[0]);
+        
+    </script>
+
+
+>>>>>>> cc439f734990d4c1bb05d32b3702c6e736d1b745
 </div>

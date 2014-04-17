@@ -1,0 +1,34 @@
+﻿Merge branch 'V1' of https://github.com/pomme190891/FinPlanWebStore into V1
+
+Conflicts:
+	FinPlanWeb/Controllers/AdminController.cs
+	FinPlanWeb/Views/Admin/Dashboard.cshtml
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch V1
+# Your branch and 'origin/V1' have diverged,
+# and have 2 and 3 different commits each, respectively.
+#   (use "git pull" to merge the remote branch into yours)
+#
+# All conflicts fixed but you are still merging.
+#   (use "git commit" to conclude merge)
+#
+# Changes to be committed:
+#
+#	modified:   FinPlanWeb/App_Start/BundleConfig.cs
+#	modified:   FinPlanWeb/Controllers/AdminController.cs
+#	modified:   FinPlanWeb/FinPlanWeb.csproj
+#	modified:   FinPlanWeb/Views/Admin/Dashboard.cshtml
+#	modified:   FinPlanWeb/Views/Admin/UserList.cshtml
+#	modified:   FinPlanWeb/Views/Shared/_Layout1.cshtml
+#	new file:   FinPlanWeb/Views/Shared/_Layout2.cshtml
+#	modified:   FinPlanWeb/Web.config
+#
+
