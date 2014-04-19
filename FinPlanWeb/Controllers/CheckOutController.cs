@@ -29,11 +29,17 @@ namespace FinPlanWeb.Controllers
             return View();
         }
 
+        public ActionResult GetPromotionInfo(string id)
+        {
+            var promotion = PromoManagement.GetPromotion(id);
+            return Json(new { isValid = promotion != null, promotion });
+        }
+
         public ActionResult ValidateCheckout(string checkout)
         {
             var serializer = new JavaScriptSerializer();
             var checkoutObj = serializer.Deserialize<Checkout>(checkout);
-            var validationMessage = string.Join("<br/>",Validate(checkoutObj));
+            var validationMessage = string.Join("<br/>", Validate(checkoutObj));
             if (!validationMessage.Any())
             {
                 TempData["checkoutInfo"] = checkoutObj;
@@ -50,8 +56,8 @@ namespace FinPlanWeb.Controllers
             {
                 throw new InvalidOperationException("You need to validate checkout before ordering by direct debit.");
             }
-            
-            OrderManagement.RecordDirectDebitTransaction(checkout, cart, user.Id );
+
+            OrderManagement.RecordDirectDebitTransaction(checkout, cart, user.Id);
 
 
             SendEmail(checkout);
@@ -104,7 +110,6 @@ namespace FinPlanWeb.Controllers
                 validationMessage.Add("City cannot be emptied.");
             }
             if (string.IsNullOrEmpty(checkout.BillingInfo.County))
-
             {
                 validationMessage.Add("County cannot be emptied.");
             }
@@ -114,9 +119,9 @@ namespace FinPlanWeb.Controllers
             }
             else
             {
-                 var regex =
-                    new Regex(
-                        @"(GIR 0AA)|((([A-Z-[QVX]][0-9][0-9]?)|(([A-Z-[QVX]][A-Z-[IJZ]][0-9][0-9]?)|(([A-Z-[QVX]][0-9][A-HJKSTUW])|([A-Z-[QVX]][A-Z-[IJZ]][0-9][ABEHMNPRVWXY])))) [0-9][A-Z-[CIKMOV]]{2})");
+                var regex =
+                   new Regex(
+                       @"(GIR 0AA)|((([A-Z-[QVX]][0-9][0-9]?)|(([A-Z-[QVX]][A-Z-[IJZ]][0-9][0-9]?)|(([A-Z-[QVX]][0-9][A-HJKSTUW])|([A-Z-[QVX]][A-Z-[IJZ]][0-9][ABEHMNPRVWXY])))) [0-9][A-Z-[CIKMOV]]{2})");
                 var match = regex.Match(checkout.BillingInfo.PostCode);
                 if (!match.Success)
                 {
@@ -174,6 +179,11 @@ namespace FinPlanWeb.Controllers
                 filterContext.Result = new RedirectToRouteResult(
             new RouteValueDictionary {{ "Controller", "Account" },
                                       { "Action", "Login" } });
+                var controller = filterContext.Controller as Controller;
+                if (controller != null)
+                {
+                    controller.TempData.Add("ReturnUrl", controller.Request.Url.AbsoluteUri);
+                }
             }
             base.OnActionExecuting(filterContext);
         }

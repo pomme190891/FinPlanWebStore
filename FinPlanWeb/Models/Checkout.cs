@@ -10,7 +10,7 @@
 
         public BillingInfo BillingInfo { get; set; }
         public PaymentInfo PaymentInfo { get; set; }
-
+        public string PromotionCode { get; set; }
     }
 
     public class PaymentInfo

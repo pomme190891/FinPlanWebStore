@@ -10,17 +10,15 @@ namespace FinPlanWeb.Controllers
 {
     public class AccountController : BaseController
     {
-        //
-        // GET: /User/
-
-        //public ActionResult Index()
-        //{
-        //    return View();
-        //}
-
+        
         [HttpGet]
         public ActionResult LogIn()
         {
+            var returnUrl = TempData["ReturnUrl"];
+            if (returnUrl != null && !string.IsNullOrEmpty(returnUrl.ToString()))
+            {
+                TempData["ReturnUrl"] = returnUrl;
+            }
             return View();
         }
 
@@ -52,6 +50,7 @@ namespace FinPlanWeb.Controllers
         [HttpPost]
         public ActionResult Login(User user)
         {
+            var returnUrl = TempData["ReturnUrl"];
             if (ModelState.IsValid)
             {
                 if (UserManagement.IsValid(user.Username, user.Password))
@@ -64,6 +63,10 @@ namespace FinPlanWeb.Controllers
                     var validUser = UserManagement.GetValidUserList().Single(x => x.UserName == user.Username);
                     FormsAuthentication.SetAuthCookie(user.Username, user.RememberMe);
                     Session["User"] = new UserLoginDto {Username = user.Username, Id = validUser.Id};
+                    if (returnUrl != null && !string.IsNullOrEmpty(returnUrl.ToString()))
+                    {
+                        return Redirect(returnUrl.ToString());
+                    }
                     return RedirectToAction("ProductView", "Product");
                 }
 
@@ -75,6 +78,7 @@ namespace FinPlanWeb.Controllers
                 {
                     ModelState.AddModelError("Password", "Password is incorrect!");
                 }
+                TempData["ReturnUrl"] = returnUrl;
             }
             return View(user);
         }
@@ -86,6 +90,7 @@ namespace FinPlanWeb.Controllers
         public ActionResult LogOut()
         {
             FormsAuthentication.SignOut();
+            Session["User"] = null;
             return RedirectToAction("Index", "Home");
         }
 

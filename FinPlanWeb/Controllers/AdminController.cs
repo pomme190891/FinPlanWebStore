@@ -67,7 +67,6 @@ namespace FinPlanWeb.Controllers
 
         public ActionResult Paging(int num, int isInactive)
         {
-<<<<<<< HEAD
             var list = UserManagement.GetAllUserList();
             if (isInactive == 1)
             {
@@ -79,9 +78,6 @@ namespace FinPlanWeb.Controllers
             }
             var users = ApplyPaging(list, num);
 
-=======
-            var users = ApplyPaging(UserManagement.GetAllUserList(), num);
->>>>>>> cc439f734990d4c1bb05d32b3702c6e736d1b745
             return Json(users, JsonRequestBehavior.AllowGet);
         }
 
@@ -151,11 +147,7 @@ namespace FinPlanWeb.Controllers
             });
         }
 
-<<<<<<< HEAD
         public List<string> Validate(EditUserDTO user, bool isCreating,out List<string> invalidIds)
-=======
-        public List<string> Validate(EditUserDTO user, bool isCreating)
->>>>>>> cc439f734990d4c1bb05d32b3702c6e736d1b745
         {
             var validationMessage = new List<string>();
             var validationId = new List<string>();
@@ -199,10 +191,7 @@ namespace FinPlanWeb.Controllers
             if (isCreating && string.IsNullOrEmpty(user.Password))
             {
                 validationMessage.Add("Password is empty.");
-<<<<<<< HEAD
                 validationId.Add("Password");
-=======
->>>>>>> cc439f734990d4c1bb05d32b3702c6e736d1b745
             }
 
             if (string.IsNullOrEmpty(user.FirstName))

@@ -11,8 +11,7 @@
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseZero">
-                            Cart Summary
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseZero">Cart Summary
                         </a>
                     </h4>
                 </div>
@@ -41,6 +40,11 @@
                                 <!-- /ko -->
                             </tbody>
                         </table>
+                        <div class="form-group form-inline">
+                            <input type="text" class="form-control" placeholder="Promotion Code" data-bind="value: checkout.PromotionCode">
+                            <button type="submit" class="btn btn-default" data-bind="click: submitPromotion">Submit</button>
+                        </div>
+
                         @*<fieldset>
                                 <legend>What would you like to do next?</legend>
                                 <p>Choose if you have a discount code or reward points you want to use or would like to estimate your delivery cost.</p>
@@ -74,6 +78,10 @@
                                     <td class="text-right" data-bind="text: '£' + subTotalPrice()"></td>
                                 </tr>
                                 <tr>
+                                    <td class="text-right">Discount:</td>
+                                    <td class="text-right" data-bind="text: '£ ' + discountPrice()"></td>
+                                </tr>
+                                <tr>
                                     <td class="text-right">VAT (20%):</td>
                                     <td class="text-right" data-bind="text: '£' + vatPrice()"></td>
                                 </tr>
@@ -91,8 +99,7 @@
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
-                            Billing Information
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">Billing Information
                         </a>
                     </h4>
                 </div>
@@ -161,8 +168,7 @@
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
-                            Payment Method
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">Payment Method
                         </a>
                     </h4>
                 </div>
@@ -188,7 +194,6 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-
                                 </div>
                             </div>
                         </div>
@@ -222,37 +227,16 @@
                         <!-- /ko -->
                     </tbody>
                 </table>
-                @*<fieldset>
-                        <legend>What would you like to do next?</legend>
-                        <p>Choose if you have a discount code or reward points you want to use or would like to estimate your delivery cost.</p>
-                        <div id="accordion" class="panel-group">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Use Coupon Code
-                                        </a>
-                                    </h4>
-                                </div>
-                                <div id="collapseOne" class="panel-collapse collapse">
-                                    <div class="panel-body">
-                                        <h5>Enter your coupon here:</h5>
 
-                                        <form class="form-inline" role="search">
-                                            <div class="form-group">
-                                                <input type="text" class="form-control" placeholder="Search">
-                                            </div>
-                                            <button type="submit" class="btn btn-default">Submit</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </fieldset> *@
                 <table class="table table-striped">
                     <tbody>
                         <tr>
                             <td class="text-right">Sub-Total:</td>
                             <td class="text-right" data-bind="text: '£' + subTotalPrice()"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">Discount:</td>
+                            <td class="text-right" data-bind="text: '£ ' + discountPrice()"></td>
                         </tr>
                         <tr>
                             <td class="text-right">VAT (20%):</td>
@@ -287,9 +271,10 @@
             </div>
 
             <label>
-                <input type="checkbox" value="true" data-bind="checked:terms" />Terms and Condition
+                <input type="checkbox" value="true" data-bind="checked: terms" />Terms and Condition
             </label>
-            <button class="btn btn-success" data-bind="click:continueOrder,enable:isTermConfirmed" >Confirm Order</button> <button class="btn btn-danger" data-bind="click: backToEdit ">Back to Edit</button>
+            <button class="btn btn-success" data-bind="click: continueOrder, enable: isTermConfirmed">Confirm Order</button>
+            <button class="btn btn-danger" data-bind="click: backToEdit ">Back to Edit</button>
 
         </div>
 
@@ -304,15 +289,29 @@
         checkout: ko.mapping.fromJS(@Html.Raw(@ViewBag.Checkout)),
         orderConfirmation: ko.observable(false),
         validationMessage: ko.observable(),
+        promotionRate: ko.observable(0),
+        promotionPrice: ko.observable(0),
         terms: ko.observable()
     }
 
-    vm.isTermsConfirmed = ko.computed(function() {
+    vm.isTermConfirmed = ko.computed(function () {
         if (vm.terms()) {
             return true;
         }
         return false;
     });
+
+    vm.submitPromotion = function () {
+        var code = vm.checkout.PromotionCode();
+        $.post('@Url.Action("GetPromotionInfo")', { id: code }, function (data) {
+            vm.promotionRate(0);
+            vm.promotionPrice(0);
+            if (data.isValid) {
+                vm.promotionRate(data.promotion.Rate);
+                vm.promotionPrice(data.promotion.Price);
+            }
+        });
+    };
 
     vm.subTotalPrice = ko.computed(function () {
         var totalPrice = 0.00;
@@ -323,15 +322,26 @@
         return totalPrice.toFixed(2);
     });
 
-    vm.totalPrice = ko.computed(function () {
-        var subtotal = vm.subTotalPrice();
-        var totalPrice = subtotal * 120 / 100;
-        return totalPrice.toFixed(2);
-    });
-
     vm.vatPrice = ko.computed(function () {
         var vatprice = vm.subTotalPrice() * 20 / 100;
         return vatprice.toFixed(2);
+    });
+
+    vm.discountPrice = ko.computed(function () {
+        var totalPrice = 0.00;
+        var shoppingCart = vm.cart();
+        var promotionRate = vm.promotionRate();
+        var promotionPrice = vm.promotionPrice();
+        $.each(shoppingCart, function (index, value) {
+            totalPrice += value.TotalPrice;
+        });
+        return (((promotionRate * totalPrice) / 100) + promotionPrice).toFixed(2);
+    });
+
+    vm.totalPrice = ko.computed(function () {
+        var subtotal = parseFloat(vm.subTotalPrice());
+        var totalPrice = subtotal + parseFloat(vm.vatPrice()) - parseFloat(vm.discountPrice());
+        return totalPrice.toFixed(2);
     });
 
     vm.billingInfoDescription = ko.computed(function () {
@@ -343,11 +353,11 @@
         return html;
     });
 
-    vm.continueOrder = function() {
+    vm.continueOrder = function () {
         if (vm.checkout.PaymentInfo.IsDirectDebit()) {
             window.location.href = "@Url.Action("OrderByDirectDebit")";
         } else {
-            window.location.href = "@Url.Action("Index","Payment")";
+            window.location.href = "@Url.Action("Index", "Payment")";
         }
     };
 
