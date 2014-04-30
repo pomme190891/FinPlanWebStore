@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
+using System.Text;
 using System.Text.RegularExpressions;
-using System.Web;
-using System.Web.Helpers;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Script.Serialization;
-using System.Web.WebPages;
 using FinPlanWeb.Database;
 using FinPlanWeb.DTOs;
 using FinPlanWeb.Models;
@@ -29,12 +27,26 @@ namespace FinPlanWeb.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Get Promotion Info and return in Json String
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult GetPromotionInfo(string id)
         {
             var promotion = PromoManagement.GetPromotion(id);
             return Json(new { isValid = promotion != null, promotion });
         }
 
+
+        /// <summary>
+        /// Checkout Validation Method, also store checkout info as a session.
+        /// Provides serialization and deserialization functionality for AJAX-enabled applications.
+        ///  This method serializes an object and converts it to a JSON string.
+        ///  Deserialization from JSON string to any object type
+        /// </summary>
+        /// <param name="checkout"></param>
+        /// <returns></returns>
         public ActionResult ValidateCheckout(string checkout)
         {
             var serializer = new JavaScriptSerializer();
@@ -47,6 +59,10 @@ namespace FinPlanWeb.Controllers
             return Json(new { validationMessage, passed = !validationMessage.Any() });
         }
 
+        /// <summary>
+        /// Direct Debit Order
+        /// </summary>
+        /// <returns></returns>
         public ActionResult OrderByDirectDebit()
         {
             var checkout = TempData["checkoutInfo"] as Checkout;
@@ -57,26 +73,81 @@ namespace FinPlanWeb.Controllers
                 throw new InvalidOperationException("You need to validate checkout before ordering by direct debit.");
             }
 
-            OrderManagement.RecordDirectDebitTransaction(checkout, cart, user.Id);
+            int orderId;
+            OrderManagement.RecordDirectDebitTransaction(checkout, cart, user.Id, out orderId);
 
-
-            SendEmail(checkout);
+            SendEmail(checkout, cart, orderId);
             return View();
         }
 
-        private void SendEmail(Checkout checkout, string orderNumber = "")
+
+        /// <summary>
+        /// Get the system to send email once Direct Debit has been placed.
+        /// </summary>
+        /// <param name="checkout"></param>
+        /// <param name="cart"></param>
+        /// <param name="orderNumber"></param>
+
+        private void SendEmail(Checkout checkout, List<CartItem> cart, int orderNumber)
+
         {
-            MailMessage mail = new MailMessage("you@yourcompany.com", checkout.BillingInfo.Email);
-            SmtpClient client = new SmtpClient();
+            var mail = new MailMessage("you@yourcompany.com", checkout.BillingInfo.Email);
+            var client = new SmtpClient();
+            var bodyText = "<html>" +
+                           "<head>" +
+                               "<style> " +
+                                "table{border-collapse:collapse;} " +
+                                "table, td, th{border:1px solid black;} " +
+                               "</style>" +
+                           "</head>" +
+                           "<body>" +
+                           "<h2>Your order has been confirmed. The order number is : +" + orderNumber + "</h2>" +
+                           "<p>Below are a list of items that you have purchased:</p></br></br>" +
+                           "<table>" +
+                               "<thead>" +
+                                   "<tr>" +
+                                       "<td>Product Code</td>" +
+                                       "<td>Product Name</td>" +
+                                       "<td>Quantity</td>" +
+                                   "</tr>" +
+                               "</thead>" +
+                               "<tbody>" +
+                               GenerateInnerOrderItem(cart) +
+                               "</tbody>" +
+                           "</table>" +
+                           "</body>" +
+                           "</html>";
             client.Port = 25;
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
             client.UseDefaultCredentials = false;
             client.Host = "localhost";
             mail.Subject = "Order Confirmation:" + orderNumber;
-            mail.Body = "this is my test email body";
+            mail.IsBodyHtml = true;
+            mail.Body = bodyText;
             client.Send(mail);
         }
 
+        /// <summary>
+        /// Generate List of Cart Items to be displayed on the email.
+        /// </summary>
+        /// <param name="cart"></param>
+        /// <returns></returns>
+        private string GenerateInnerOrderItem(IEnumerable<CartItem> cart)
+        {
+            var stringBuilder = new StringBuilder();
+            foreach (var item in cart)
+            {
+                stringBuilder.Append(string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", item.Code, item.Name,
+                                                   item.Quantity));
+            }
+            return stringBuilder.ToString();
+        }
+
+        /// <summary>
+        /// Checkout Validation
+        /// </summary>
+        /// <param name="checkout"></param>
+        /// <returns></returns>
         private IEnumerable<string> Validate(Checkout checkout)
         {
             var validationMessage = new List<string>();
@@ -168,21 +239,25 @@ namespace FinPlanWeb.Controllers
         }
     }
 
-
+    /// <summary>
+    /// Called by the ASP.NET MVC framework before the action method executes.
+    /// Store user session. Use this before running the ActionResult CheckOut()
+    /// </summary>
     public class CheckUserSession : ActionFilterAttribute
     {
-        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        public override void OnActionExecuting(ActionExecutingContext filterContext) 
         {
-            var userSessoion = filterContext.RequestContext.HttpContext.Session["User"];
+            var userSessoion = filterContext.RequestContext.HttpContext.Session["User"]; //get user session
             if (userSessoion == null)
             {
                 filterContext.Result = new RedirectToRouteResult(
-            new RouteValueDictionary {{ "Controller", "Account" },
+                new RouteValueDictionary {{ "Controller", "Account" },
                                       { "Action", "Login" } });
                 var controller = filterContext.Controller as Controller;
                 if (controller != null)
                 {
-                    controller.TempData.Add("ReturnUrl", controller.Request.Url.AbsoluteUri);
+                    if (controller.Request.Url != null)
+                        controller.TempData.Add("ReturnUrl", controller.Request.Url.AbsoluteUri); //temp data for return url
                 }
             }
             base.OnActionExecuting(filterContext);

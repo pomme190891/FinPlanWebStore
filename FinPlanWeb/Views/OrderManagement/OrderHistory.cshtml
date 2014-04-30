@@ -1,0 +1,193 @@
+﻿@{
+    Layout = "";
+}
+<style type="text/css">
+    #orderGrid table tbody tr:hover
+    {
+        cursor: pointer;
+    }
+</style>
+<div id="orderManagement">
+    <h4>Order History</h4>
+    <div>
+        <input type="text" class="datepicker" data-bind="value: searchParam.from" placeholder="From" />
+        <input type="text" class="datepicker" data-bind="value: searchParam.to" placeholder="To" />
+        <input type="text" data-bind="value: searchParam.firm" placeholder="Firm" />
+        <select data-bind="value: searchParam.paymentType">
+            <option value="">All</option>
+            <option value="Paypal">Paypal</option>
+            <option value="Direct Debit">Direct Debit</option>
+        </select>
+        <button type="button" class="btn btn-primary" data-bind="click: search">Search</button>
+    </div>
+
+    <div id="orderGrid" class="table-responsive">
+        <table class="table table-striped table-bordered table-hover" style="font-size: 11px">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Date</th>
+                    <th>Payment Type</th>
+                    <th>Currency</th>
+                    <th>Buyer Username</th>
+                    <th>Buyer Firm Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- ko foreach:orders -->
+                <tr data-bind="click: $root.getOrderDetail">
+                    <td class="col-md-1" data-bind="text: Id"></td>
+                    <td class="col-md-1" data-bind="text: Name"></td>
+                    <td class="col-md-1" data-bind="text: TransactionDate"></td>
+                    <td class="col-md-2" data-bind="text: PaymentType"></td>
+                    <td class="col-md-2" data-bind="text: '£ ' + Currency.toFixed(2)"></td>
+                    <td class="col-md-3" data-bind="text: BuyerUsername"></td>
+                    <td class="col-md-3" data-bind="text: BuyerFirmName"></td>
+                </tr>
+                <!-- /ko -->
+            </tbody>
+        </table>
+        <div id="page-selection-orderhistory"></div>
+    </div>
+    <div class="modal fade" id="orderDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Order Detail</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label">First Name: </label>
+                        <span data-bind="text: orderDetail.FirstName"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Last Name: </label>
+                        <span data-bind="text: orderDetail.LastName"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Transaction Date: </label>
+                        <span data-bind="text: orderDetail.TransactionDate"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Email: </label>
+                        <span data-bind="text: orderDetail.Email"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Payment Type: </label>
+                        <span data-bind="text: orderDetail.PaymentType"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Payment Status: </label>
+                        <span data-bind="text: orderDetail.PaymentStatus"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Currency: </label>
+                        <span data-bind="text: '£' + orderDetail.Currency().toFixed(2)"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Gross: </label>
+                        <span data-bind="text: '£' + orderDetail.Gross().toFixed(2)"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Buyer Username: </label>
+                        <span data-bind="text: orderDetail.BuyerUsername"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Buyer FirmName: </label>
+                        <span data-bind="text: orderDetail.BuyerFirmName"></span>
+                    </div>
+                    <div class="form-group" data-bind="visible: orderDetail.PaypalId">
+                        <label class="control-label">Paypal Id: </label>
+                        <span data-bind="text: orderDetail.PaypalId"></span>
+                    </div>
+                    <div class="form-group" data-bind="visible: orderDetail.DirectDebitId">
+                        <label class="control-label">Direct Debit Id: </label>
+                        <span data-bind="text: orderDetail.DirectDebitId"></span>
+                    </div>
+                    <div class="form-group" data-bind="visible: orderDetail.DirectDebitId">
+                        <label class="control-label">Promotion Code Id: </label>
+                        <span data-bind="text: orderDetail.PromotionCodeId"></span>
+                    </div>
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th class="text-left">Product Code</th>
+                                <th class="text-left">Product Name</th>
+                                <th class="text-center">Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- ko foreach:orderDetail.OrderItems -->
+                            <tr>
+                                <td class="text-left" data-bind="text: $data.ProductCode"></td>
+                                <td class="text-left" data-bind="text: $data.ProductName"></td>
+                                <td class="text-center" data-bind="text: $data.Quantity"></td>
+                            </tr>
+                            <!-- /ko -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var orderVM = {
+        orders: ko.observableArray(@Html.Raw(@ViewBag.Orders)), // Initialise an Order array
+        searchParam: {
+            paymentType: ko.observable(), // KO variable
+            from: ko.observable(),
+            to: ko.observable(),
+            firm: ko.observable()
+        },
+        orderDetail: ko.mapping.fromJS(@Html.Raw(@ViewBag.OrderDetail))
+    };
+    orderVM.search = function () {
+        $.post("@Url.Action("Search", "OrderManagement")", {
+            paymentType: orderVM.searchParam.paymentType(),
+            from: orderVM.searchParam.from(),
+            to: orderVM.searchParam.to(),
+            firm: orderVM.searchParam.firm()
+        }, function (ret) {
+            orderVM.orders(ret.orderList);
+            orderVM.InitialisePaging(ret.totalPage);
+        });
+    };
+
+    orderVM.getOrderDetail = function (data) {
+        $.get("@Url.Action("GetFullOrderDetail", "OrderManagement")", {
+            orderId: data.Id
+        }, function (ret) {
+            ko.mapping.fromJS(ret.orderDetail, orderVM.orderDetail);
+            $('#orderDetailModal').modal('show');
+        });
+    };
+
+    orderVM.InitialisePaging = function (totalPage) {
+        $('#page-selection-orderhistory').bootpag({
+            total: totalPage
+        }).on("page", function (event, /* page number here */ num) {
+            $.post("@Url.Action("Paging", "OrderManagement")", {
+                pageNum: num,
+                paymentType: orderVM.searchParam.paymentType(),
+                from: orderVM.searchParam.from(),
+                to: orderVM.searchParam.to(),
+                firm: orderVM.searchParam.firm(),
+            }, function (ret) {
+                orderVM.orders(ret.orderList);
+            });
+        });
+    };
+
+    ko.applyBindings(orderVM, $('#orderManagement')[0]);
+    orderVM.InitialisePaging(@ViewBag.TotalOrdersPage);
+    $('.datepicker').datepicker(
+        {
+            dateFormat: "d/mm/yy",
+        });
+</script>

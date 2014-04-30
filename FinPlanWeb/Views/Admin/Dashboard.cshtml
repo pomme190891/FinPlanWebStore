@@ -12,27 +12,35 @@
     });
 </script>
 
-<div style="padding-top: 25px;">
+<div style="padding-top: 25px;" id="userAdministration">
     <div class="well">
         <ul class="nav nav-tabs" id="adminTab">
-            <li class="active"><a href="#dashboard"><i class="glyphicon glyphicon-dashboard"></i>Dashboard</a></li>
-            <li><a href="#orderhistory"><i class="glyphicon glyphicon-shopping-cart"></i>Order History</a></li>
+ 
+            <li><a href="#orderhistory"><i class="glyphicon glyphicon-shopping-cart"></i>&nbsp;Order History</a></li>
             <li class="dropdown">
-                <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="glyphicon glyphicon-user"></i>User Administration <b class="caret"></b></a>
+                <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="glyphicon glyphicon-user"></i>&nbsp;User Administration <b class="caret"></b></a>
                 <ul class="dropdown-menu">
                     <li><a href="#manageuser"><i class="glyphicon glyphicon-cog"></i>Manage Users</a></li>
-                    <li><a href="#useractivity"><i class="glyphicon glyphicon-eye-open"></i>Users Activities</a></li>
+                    <!-- <li><a href="#useractivity"><i class="glyphicon glyphicon-eye-open"></i>Users Activities</a></li> -->
                 </ul>
             </li>
         </ul>
         <div class="tab-content">
-            <div id="dashboard" class="tab-pane fade in active">
-                <h3>Section A</h3>
-                <p>Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui. Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth.</p>
+
+            <div id="orderhistory" class="tab-pane fade in active">
+                @{
+                    Html.RenderAction("OrderHistory", "OrderManagement");
+                }
             </div>
-            <div id="orderhistory" class="tab-pane fade">
-                <h3>Section B</h3>
-                <p>Vestibulum nec erat eu nulla rhoncus fringilla ut non neque. Vivamus nibh urna, ornare id gravida ut, mollis a magna. Aliquam porttitor condimentum nisi, eu viverra ipsum porta ut. Nam hendrerit bibendum turpis, sed molestie mi fermentum id. Aenean volutpat velit sem. Sed consequat ante in rutrum convallis. Nunc facilisis leo at faucibus adipiscing.</p>
+            <div id="productmanagement" class="tab-pane fade">
+                @{
+                    Html.RenderAction("ProductSection", "Product");
+                }
+            </div>
+            <div id="promomanagement" class="tab-pane fade">
+                @{
+                    Html.RenderAction("PromotionSection", "Promo");
+                }
             </div>
             <div id="manageuser" class="tab-pane fade">
                 <div id="usertable">
@@ -70,7 +78,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- ko foreach:filteredUsers -->
+                                <!-- ko foreach:users -->
                                 <tr>
                                     <td class="col-md-1" data-bind="text: UserName"></td>
                                     <td class="col-md-1" data-bind="text: FirstName"></td>
@@ -81,7 +89,7 @@
                                     <td class="col-md-3">
                                         <button type="button" class="btn btn-primary btn-xs" data-bind="click: $root.edit">Edit</button>
                                         <button type="button" class="btn btn-danger btn-xs" data-bind="    click: $root.delete">Delete</button>
-                                        <button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#changePasswordModal">Change Password</button>
+                                        <button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-bind="click:$root.displayChangePasswordModal">Change Password</button>
                                     </td>
                                 </tr>
                                 <!-- /ko -->
@@ -89,10 +97,6 @@
                         </table>
                         <div id="page-selection"></div>
                     </div>
-<<<<<<< HEAD
-=======
-
->>>>>>> cc439f734990d4c1bb05d32b3702c6e736d1b745
                     <!-- User Modal -->
                     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
@@ -103,14 +107,13 @@
                                 </div>
                                 <div class="alert alert-danger" data-bind="html: validationMessageCreate, visible: validationMessageCreate"></div>
                                 <div class="modal-body">
-<<<<<<< HEAD
                                     <div class="form-group" id="Username">
                                         <label class="control-label">Username</label>
                                         <input type="text" class="form-control" name="Username" placeholder="userName" data-bind="value:userDetails.UserName, disable:editting" />
                                     </div>
-                                    <div class="form-group" id="Password"  data-bind="visible: creating">
+                                    <div class="form-group" id="Password" data-bind="visible: creating">
                                         <label class="control-label">New Password</label>
-                                        <input type="password" class="form-control"  name="password" placeholder="Password" data-bind="value:userDetails.Password" />
+                                        <input type="password" class="form-control" name="password" placeholder="Password" data-bind="value:userDetails.Password" />
                                     </div>
                                     <div class="form-group" id="ConfirmPassword" data-bind="visible: creating">
                                         <label class="control-label">Confirm New Password</label>
@@ -139,38 +142,6 @@
                                                 <input type="checkbox" data-bind="checked: userDetails.IsAdmin">
                                                 Administator
                                             </label>
-=======
-                                    <form id="newuser">
-                                        <div class="form-group">
-                                            <label class="control-label">Username</label>
-                                            <input type="text" class="form-control" name="username" placeholder="Username" data-bind="value:userDetails.UserName, disable:editting" />
-
-                                        </div>
-                                        <div class="form-group" data-bind="visible: creating">
-                                            <label class="control-label">New Password</label>
-                                            <input type="password" class="form-control" name="password" placeholder="Password" data-bind="value:userDetails.Password" />
-                                        </div>
-                                        <div class="form-group" data-bind="visible: creating">
-                                            <label class="control-label">Confirm New Password</label>
-                                            <input type="password" class="form-control" name="confirmPassword" placeholder="Retype Password" data-bind="value:userDetails.ConfirmPassword" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label">Firstname</label>
-                                            <input type="text" class="form-control" name="firstName" placeholder="firstName" data-bind="value: userDetails.FirstName" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label">Surname</label>
-                                            <input type="text" class="form-control" name="surName" placeholder="surName" data-bind="value: userDetails.SurName" />
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="control-label">Firm Name</label>
-                                            <input type="text" class="form-control" name="firmName" placeholder="firmName" data-bind="value: userDetails.FirmName" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label">Email</label>
-                                            <input type="text" class="form-control" name="Email" placeholder="Email" data-bind="value: userDetails.Email" />
->>>>>>> cc439f734990d4c1bb05d32b3702c6e736d1b745
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label">Privileges: </label>
@@ -182,12 +153,37 @@
                                                 </label>
                                             </div>
                                         </div>
-                                    </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary" data-bind="click:save">Save changes</button>
+                                    </div>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary" data-bind="click:save">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Change Password Modal -->
+                <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title" id="changePasswordModalLabel" data-bind="text: 'Change password for user' + changePasswordDetail.username()"></h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="alert alert-danger" data-bind="html: changePasswordDetail.validationMessage, visible: changePasswordDetail.validationMessage"></div>
+                                <div class="form-group" id="NewPassword">
+                                    <label class="col-md-3 control-label">New Password</label>
+                                    <div class="col-md-6">
+                                        <input type="password" class="form-control" name="NewPassword" data-bind="value:changePasswordDetail.newPassword" />
+                                    </div>
                                 </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" data-bind="click:updatePassword">Save changes</button>
                             </div>
                         </div>
                     </div>
@@ -195,432 +191,244 @@
             </div>
         </div>
     </div>
+</div>
+<script type="text/javascript">
+    var model = {
+        userDetails: {
+            UserName: ko.observable(),
+            Password: ko.observable(),
+            FirstName: ko.observable(),
+            SurName: ko.observable(),
+            FirmName: ko.observable(),
+            AddedDate: ko.observable(new Date()),
+            Email: ko.observable(),
+            IsAdmin: ko.observable(),
+            ConfirmPassword : ko.observable()
+        },
+        changePasswordDetail: {
+            username: ko.observable(),
+            userId : ko.observable(),
+            newPassword: ko.observable(),
+            validationMessage:ko.observable()
+        },
+        users: ko.observableArray(@Html.Raw(@ViewBag.Users)),
+        editting: ko.observable(false),
+        creating: ko.observable(false),
+        deleting: ko.observable(false),
+        validationMessage: ko.observable(null),
+        validationMessageCreate: ko.observable(null),
+        filter: ko.observable("3")
+    };
 
+    model.addNewUser = function() {
+        model.clearUserDetails();
+        model.creating(true);
+        model.editting(false);
+        model.deleting(false);
+        $('#myModal').modal('show');
+    };
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> cc439f734990d4c1bb05d32b3702c6e736d1b745
-    <!-- Change Password Modal -->
-    <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="changePasswordModalLabel">Change password</h4>
-                </div>
-                <div class="modal-body">
-
-
-                    <form id="tryitForm" class="form-horizontal">
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Full name</label>
-                            <div class="col-md-4">
-                                <input type="text" class="form-control" name="firstName" />
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" class="form-control" name="lastName" />
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Email address</label>
-                            <div class="col-md-6">
-                                <input type="text" class="form-control" name="email" />
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Gender</label>
-                            <div class="col-md-6">
-                                <div class="radio">
-                                    <label>
-                                        <input type="radio" name="gender" value="male" />
-                                        Male</label>
-                                </div>
-                                <div class="radio">
-                                    <label>
-                                        <input type="radio" name="gender" value="female" />
-                                        Female</label>
-                                </div>
-                                <div class="radio">
-                                    <label>
-                                        <input type="radio" name="gender" value="other" />
-                                        Other</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-offset-3 col-md-8">
-                                <button type="submit" class="btn btn-primary">Say hello</button>
-                            </div>
-                        </div>
-                    </form>
-
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-<<<<<<< HEAD
-=======
-
-
-    @*    <script type="text/javascript">
-        
-        
-        $("form").validate({
-          
-            showErrors: function(errorMap, errorList) {
- 
-                // Clean up any tooltips for valid elements
-                $.each(this.validElements(), function (index, element) {
-                    var $element = $(element);
- 
-                    $element.data("title", "") // Clear the title - there is no error associated anymore
-                        .removeClass("error")
-                        .tooltip("destroy");
-                });
- 
-                // Create new tooltips for invalid elements
-                $.each(errorList, function (index, error) {
-                    var $element = $(error.element);
- 
-                    $element.tooltip("destroy") // Destroy any pre-existing tooltip so we can repopulate with new tooltip content
-                        .data("title", error.message)
-                        .addClass("error")
-                        .tooltip(); // Create a new tooltip based on the error messsage we just set in the title
-                });
-            },
- 
-            submitHandler: function(form) {
-                alert("This is a valid form!");
-            }
-        });
-    </script>*@
-
-
-
-    <script>
-        $(document).ready(function() {
-            $('#tryitForm').bootstrapValidator({
-                fields: {
-                    firstName: {
-                        validators: {
-                            notEmpty: {
-                                message: 'The first name is required and cannot be empty'
-                            }
-                        }
-                    },
-                    lastName: {
-                        validators: {
-                            notEmpty: {
-                                message: 'The last name is required and cannot be empty'
-                            }
-                        }
-                    },
-                    email: {
-                        validators: {
-                            notEmpty: {
-                                message: 'The email address is required'
-                            },
-                            emailAddress: {
-                                message: 'The input is not a valid email address'
-                            }
-                        }
-                    },
-                    gender: {
-                        validators: {
-                            notEmpty: {
-                                message: 'The gender is required'
-                            }
-                        }
-                    }
-                },
-                submitHandler: function(validator, form, submitButton) {
-                    var fullName = [validator.getFieldElements('firstName').val(),
-                                    validator.getFieldElements('lastName').val()].join(' ');
-                    $('#helloModal')
-                        .find('.modal-title').html('Hello ' + fullName).end()
-                        .modal();
-                }
-            });
-        });
-    </script>
-
-
-
-
->>>>>>> cc439f734990d4c1bb05d32b3702c6e736d1b745
-    <script type="text/javascript">
-        var model = {
-            userDetails: {
-                UserName: ko.observable(),
-                Password: ko.observable(),
-                FirstName: ko.observable(),
-                SurName: ko.observable(),
-                FirmName: ko.observable(),
-                AddedDate: ko.observable(new Date()),
-                Email: ko.observable(),
-                IsAdmin: ko.observable(),
-                ConfirmPassword : ko.observable()
-            },
-            users: ko.observableArray(@Html.Raw(@ViewBag.Users)),
-            editting: ko.observable(false),
-            creating: ko.observable(false),
-            deleting: ko.observable(false),
-            validationMessage: ko.observable(null),
-            validationMessageCreate: ko.observable(null),
-            filter: ko.observable("3")
-        };
-
-        model.addNewUser = function() {
-            model.clearUserDetails();
-            model.creating(true);
-            model.editting(false);
-            model.deleting(false);
-            $('#myModal').modal('show');
-        };
-
-        model.filteredUsers = ko.computed(function() {
-            var filterValue = model.filter();
-<<<<<<< HEAD
-
-=======
-          
->>>>>>> cc439f734990d4c1bb05d32b3702c6e736d1b745
-            if (filterValue == "3") {
-                return model.users();
-            }
-
-            var isDeleted = filterValue == "1" ? true : false;
-
-            return ko.utils.arrayFilter(model.users(), function(user) {
-                return user.IsDeleted == isDeleted;
-            });
-        });
-
-<<<<<<< HEAD
-        model.filter.subscribe(function(value) {
-            $.ajax({
-                url: "@Url.Action("Filter")",
-                type: "POST",
-                data: { isInactive: parseInt(value) },
-                dataType: "json",
-                success: function (result) {
-                    model.users(result.users);
-                    $('#page-selection').bootpag({
-                        total: result.totalPage
-                    }).on("page", function (event, /* page number here */ num) {
-                        $.post("@Url.Action("Paging")", {num:num,isInactive:parseInt(value)}, function(users) {
-                            model.users(users);
+    model.filter.subscribe(function(value) {
+        $.ajax({
+            url: "@Url.Action("Filter")",
+                    type: "POST",
+                    data: { isInactive: parseInt(value) },
+                    dataType: "json",
+                    success: function (result) {
+                        model.users(result.users);
+                        $('#page-selection').bootpag({
+                            total: result.totalPage
+                        }).on("page", function (event, /* page number here */ num) {
+                            $.post("@Url.Action("Paging")", {num:num,isInactive:parseInt(value)}, function(users) {
+                                model.users(users);
+                            });
                         });
+                    }
+                });
+            });
+
+            model.edit = function(data) {
+                model.creating(false);
+                model.editting(true);
+                model.validationMessage(null);
+                model.validationMessageCreate(null);
+                $('.form-group').removeClass("has-error");
+                model.userDetails.UserName(data.UserName);
+                model.userDetails.Password("***********");
+                model.userDetails.FirstName(data.FirstName);
+                model.userDetails.SurName(data.SurName);
+                model.userDetails.FirmName(data.FirmName);
+                model.userDetails.Email(data.Email);
+                model.userDetails.IsAdmin(data.IsAdmin);
+                $('#myModal').modal('show');
+            };
+
+
+            model.save = function(data) {
+                if (model.editting()) {
+                    $.post("@Url.Action("UserUpdate")", ko.toJS(data.userDetails), function (result) {
+                        if (!result.passed) {
+                            model.validationMessage(result.validationMessage);
+                            $.each(result.validationIds, function(i, id) {
+                                $('#' + id).addClass("has-error");
+                            });
+                        } else {
+                            model.users(result.users);
+                            alert('Update successfully.');
+                            model.creating(false);
+                            model.editting(false);
+                            model.deleting(false);
+                            model.clearUserDetails();
+                            $('#myModal').modal('hide');
+                        }
+                    });
+                } else {
+                    $.post("@Url.Action("AddUser")",ko.toJS(data.userDetails), function (result) {
+                        if (!result.passed) {
+                            model.validationMessageCreate(result.validationMessage);
+                            $.each(result.validationIds, function(i, id) {
+                                $('#' + id).addClass("has-error");
+                            });
+                        } else {
+                            model.users(result.users);
+                            alert('Save successfully.');
+                            model.creating(false);
+                            model.editting(false);
+                            model.deleting(false);
+                            model.clearUserDetails();
+                            $('#myModal').modal('hide');
+                        }
                     });
                 }
-            });
-        });
+            };
 
-=======
->>>>>>> cc439f734990d4c1bb05d32b3702c6e736d1b745
-        model.edit = function(data) {
-            model.creating(false);
-            model.editting(true);
-            model.validationMessage(null);
-            model.validationMessageCreate(null);
-            $('.form-group').removeClass("has-error");
-            model.userDetails.UserName(data.UserName);
-            model.userDetails.Password("***********");
-            model.userDetails.FirstName(data.FirstName);
-            model.userDetails.SurName(data.SurName);
-            model.userDetails.FirmName(data.FirmName);
-            model.userDetails.Email(data.Email);
-            model.userDetails.IsAdmin(data.IsAdmin);
-            $('#myModal').modal('show');
-        };
-
-
-        model.save = function(data) {
-            if (model.editting()) {
-                $.post("@Url.Action("UserUpdate")", ko.toJS(data.userDetails), function (result) {
-                    if (!result.passed) {
-                        model.validationMessage(result.validationMessage);
-                        $.each(result.validationIds, function(i, id) {
+            model.delete = function(data) {
+                $.ajax({
+                    url: "@Url.Action("DeleteUser")",
+                    type: "POST",
+                    data: { username: data.UserName },
+                    dataType: "json",
+                    success: function (result) {
+                        model.users(result.users);
+                        alert('Delete Successfully');
+                        model.creating(false);
+                        model.editting(false);
+                    }
+                });
+            };
+            
+            model.displayChangePasswordModal = function(data) {
+                $('.form-group').removeClass("has-error");
+                model.changePasswordDetail.validationMessage(null),
+                model.changePasswordDetail.username(data.UserName);
+                model.changePasswordDetail.userId(data.Id);
+                model.changePasswordDetail.newPassword('');
+                $('#changePasswordModal').modal('show');
+            };
+            
+            model.updatePassword = function() {
+                $.ajax({
+                    type: 'post',
+                    dataType: 'json',
+                    url: '@Url.Action("ChangePassword")',
+                    data: { userId: model.changePasswordDetail.userId(), newPassword: model.changePasswordDetail.newPassword() }
+                }).done(function(ret) {
+                    if (!ret.passed) {
+                        model.changePasswordDetail.validationMessage(ret.validationMessage);
+                        $.each(ret.validationIds, function(i, id) {
                             $('#' + id).addClass("has-error");
                         });
                     } else {
-                        model.users(result.users);
-                        alert('Update successfully.');
-                        model.creating(false);
-                        model.editting(false);
-                        model.deleting(false);
-                        model.clearUserDetails();
-                        $('#myModal').modal('hide');
+                        alert('Update successful.');
+                        $('#changePasswordModal').modal('hide');
                     }
                 });
-            } else {
-                $.post("@Url.Action("AddUser")",ko.toJS(data.userDetails), function (result) {
-                    if (!result.passed) {
-                        model.validationMessageCreate(result.validationMessage);
-                        $.each(result.validationIds, function(i, id) {
-                            $('#' + id).addClass("has-error");
-                        });
-                    } else {
-                        model.users(result.users);
-                        alert('Save successfully.');
-                        model.creating(false);
-                        model.editting(false);
-                        model.deleting(false);
-                        model.clearUserDetails();
-                        $('#myModal').modal('hide');
-                    }
+            };
+            model.clearUserDetails = function() {
+                model.userDetails.UserName("");
+                model.userDetails.Password("");
+                model.userDetails.FirstName("");
+                model.userDetails.SurName("");
+                model.userDetails.FirmName("");
+                model.userDetails.Email("");
+                model.userDetails.IsAdmin("");
+                model.validationMessage(null);
+                model.validationMessageCreate(null);
+                model.userDetails.ConfirmPassword("");
+            };
+
+            $('#page-selection').bootpag({
+                total: @ViewBag.TotalUsersPage
+                }).on("page", function (event, /* page number here */ num) {
+                    $.post("@Url.Action("Paging")", {num:num,isInactive:parseInt(model.filter())}, function(users) {
+                        model.users(users);
+                    });
                 });
-            }
-        };
 
-        model.delete = function(data) {
-
-            $.ajax({
-                url: "@Url.Action("DeleteUser")",
-                type: "POST",
-                data: { username: data.UserName },
-                dataType: "json",
-                success: function (result) {
-                    model.users(result.users);
-                    alert('Delete Successfully');
-                    model.creating(false);
-                    model.editting(false);
-                }
-            });
-
-        };
+                ko.applyBindings(model, $('#manageuser')[0]);
 
 
 
+                //$(document).ready(function() {
 
-        model.resetPassword = function(data) {
-
-            @*    $.ajax({
-                url: "@Url.Action("ResetPassword")",
-                type: "POST",
-                data: { data: data.userDetails },
-                dataType: "json",
-                success: function (result) {
-                    model.users(result.users);
-                    alert('Password Reset Successfully');
-                    model.creating(false);
-                    model.editting(false);
-                }
-            });*@
-
-        };
-<<<<<<< HEAD
-
-
-=======
-        
-        
->>>>>>> cc439f734990d4c1bb05d32b3702c6e736d1b745
-        model.clearUserDetails = function () {
-            model.userDetails.UserName("");
-            model.userDetails.Password("");
-            model.userDetails.FirstName("");
-            model.userDetails.SurName("");
-            model.userDetails.FirmName("");
-            model.userDetails.Email("");
-            model.userDetails.IsAdmin("");
-            model.validationMessage(null);
-            model.validationMessageCreate(null);
-            model.userDetails.ConfirmPassword("");
-        }
-
-        $('#page-selection').bootpag({
-            total: @ViewBag.TotalUsersPage
-            }).on("page", function (event, /* page number here */ num) {
-                $.post("@Url.Action("Paging")", {num:num}, function(users) {
-                    model.users(users);
-                });
-            });
-<<<<<<< HEAD
-        ko.applyBindings(model, $('#usertable')[0]);
-
-
-
-        $(document).ready(function() {
-
-            $('#myModal').bootstrapValidator({
-                message: 'This value is not valid',
-                feedbackIcons: {
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
-                },
-                fields: {
-                    username: {
-                        message: 'The username is not valid',
-                        validators: {
-                            notEmpty: {
-                                message: 'The username is required and can\'t be empty'
-                            },
-                            stringLength: {
-                                min: 6,
-                                max: 30,
-                                message: 'The username must be more than 6 and less than 30 characters long'
-                            },
-                            regexp: {
-                                regexp: /^[a-zA-Z0-9_\.]+$/,
-                                message: 'The username can only consist of alphabetical, number, dot and underscore'
-                            }
-                        }
-                    },
-                    email: {
-                        validators: {
-                            notEmpty: {
-                                message: 'The email address is required and can\'t be empty'
-                            },
-                            emailAddress: {
-                                message: 'The input is not a valid email address'
-                            }
-                        }
-                    },
-                    password: {
-                        validators: {
-                            notEmpty: {
-                                message: 'The password is required and can\'t be empty'
-                            },
-                            identical: {
-                                field: 'confirmPassword',
-                                message: 'The password and its confirm are not the same'
-                            }
-                        }
-                    },
-                    confirmPassword: {
-                        validators: {
-                            notEmpty: {
-                                message: 'The confirm password is required and can\'t be empty'
-                            },
-                            identical: {
-                                field: 'password',
-                                message: 'The password and its confirm are not the same'
-                            }
-                        }
-                    }
-                }
-            });
-        });
-    </script>
-
-=======
-            ko.applyBindings(model, $('#usertable')[0]);
-        
-    </script>
-
-
->>>>>>> cc439f734990d4c1bb05d32b3702c6e736d1b745
-</div>
+                //    $('#myModal').bootstrapValidator({
+                //        message: 'This value is not valid',
+                //        feedbackIcons: {
+                //            valid: 'glyphicon glyphicon-ok',
+                //            invalid: 'glyphicon glyphicon-remove',
+                //            validating: 'glyphicon glyphicon-refresh'
+                //        },
+                //        fields: {
+                //            username: {
+                //                message: 'The username is not valid',
+                //                validators: {
+                //                    notEmpty: {
+                //                        message: 'The username is required and can\'t be empty'
+                //                    },
+                //                    stringLength: {
+                //                        min: 6,
+                //                        max: 30,
+                //                        message: 'The username must be more than 6 and less than 30 characters long'
+                //                    },
+                //                    regexp: {
+                //                        regexp: /^[a-zA-Z0-9_\.]+$/,
+                //                        message: 'The username can only consist of alphabetical, number, dot and underscore'
+                //                    }
+                //                }
+                //            },
+                //            email: {
+                //                validators: {
+                //                    notEmpty: {
+                //                        message: 'The email address is required and can\'t be empty'
+                //                    },
+                //                    emailAddress: {
+                //                        message: 'The input is not a valid email address'
+                //                    }
+                //                }
+                //            },
+                //            password: {
+                //                validators: {
+                //                    notEmpty: {
+                //                        message: 'The password is required and can\'t be empty'
+                //                    },
+                //                    identical: {
+                //                        field: 'confirmPassword',
+                //                        message: 'The password and its confirm are not the same'
+                //                    }
+                //                }
+                //            },
+                //            confirmPassword: {
+                //                validators: {
+                //                    notEmpty: {
+                //                        message: 'The confirm password is required and can\'t be empty'
+                //                    },
+                //                    identical: {
+                //                        field: 'password',
+                //                        message: 'The password and its confirm are not the same'
+                //                    }
+                //                }
+                //            }
+                //        }
+                //    });
+                //});
+</script>

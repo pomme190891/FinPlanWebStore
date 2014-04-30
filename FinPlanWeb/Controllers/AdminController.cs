@@ -4,41 +4,13 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
+using FinPlanWeb.DTOs;
 using FinPlanWeb.Database;
 
 namespace FinPlanWeb.Controllers
 {
-    public class EditUserDTO
-    {
-        public int Id { get; set; }
-        public string UserName { get; set; }
-        public string FirstName { get; set; }
-        public string SurName { get; set; }
-        public string FirmName { get; set; }
-        public string Password { get; set; }
-        public string Email { get; set; }
-        public bool IsAdmin { get; set; }
-        public string ConfirmPassword { get; set; }
-
-        public UserManagement.User ToUser()
-        {
-            return new UserManagement.User
-            {
-                Id = Id,
-                UserName = UserName,
-                FirstName = FirstName,
-                SurName = SurName,
-                FirmName = FirmName,
-                Password = Password,
-                Email = Email,
-                IsAdmin = IsAdmin
-            };
-        }
-    }
-
     public class AdminController : BaseController
     {
-        //
         // GET: /Admin/
         private const int pageSize = 10;
 
@@ -89,11 +61,16 @@ namespace FinPlanWeb.Controllers
 
         public ActionResult Dashboard()
         {
+            PopulateUserAdministration();
+            return View();
+        }
+
+        private void PopulateUserAdministration()
+        {
             var allUsers = UserManagement.GetAllUserList();
             var filteredUsers = ApplyPaging(allUsers, 1);
             ViewBag.Users = new JavaScriptSerializer().Serialize(filteredUsers);
-            ViewBag.TotalUsersPage = (int)Math.Ceiling(((double)allUsers.Count() / (double)pageSize));
-            return View();
+            ViewBag.TotalUsersPage = (int) Math.Ceiling(((double) allUsers.Count()/(double) pageSize));
         }
 
         public ActionResult AddUser(EditUserDTO user)
@@ -122,7 +99,7 @@ namespace FinPlanWeb.Controllers
         public ActionResult UserUpdate(EditUserDTO user)
         {
             var validationIds = new List<string>();
-            var validationMessage = Validate(user, false,out validationIds);
+            var validationMessage = Validate(user, false, out validationIds);
             if (!validationMessage.Any())
             {
                 UserManagement.UpdateUser(user.ToUser());
@@ -147,7 +124,50 @@ namespace FinPlanWeb.Controllers
             });
         }
 
-        public List<string> Validate(EditUserDTO user, bool isCreating,out List<string> invalidIds)
+        public ActionResult ChangePassword(int userId, string newPassword)
+        {
+            var validationIds = new List<string>();
+            var validationMessage = ValidatePassword(newPassword, out validationIds);
+            if (!validationMessage.Any())
+            {
+                UserManagement.UpdateUserPassword(userId,newPassword);
+            }
+
+            return Json(new
+            {
+                passed = !validationMessage.Any(),
+                validationIds,
+                validationMessage = string.Join("</br>", validationMessage)
+            });
+        }
+
+        public List<string> ValidatePassword(string newPassword, out List<string> invalidIds)
+        {
+            var validationMessage = new List<string>();
+            var validationId = new List<string>();
+
+            if (string.IsNullOrEmpty(newPassword))
+            {
+                validationMessage.Add("New password is empty. ");
+                validationId.Add("NewPassword");
+            }
+
+            if (!string.IsNullOrEmpty(newPassword))
+            {
+                var regex = new Regex(@"^.*(?=.{6,})(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$");
+                var match = regex.Match(newPassword);
+                if (!match.Success)
+                {
+                    validationMessage.Add("Invalid Password. Password must contain at least a digit, a uppercase and a lowercase letter. Mininum 6 characters are required. ");
+                    validationId.Add("NewPassword");
+                }
+            }
+
+            invalidIds = validationId;
+            return validationMessage;
+        }
+
+        public List<string> Validate(EditUserDTO user, bool isCreating, out List<string> invalidIds)
         {
             var validationMessage = new List<string>();
             var validationId = new List<string>();
@@ -223,8 +243,10 @@ namespace FinPlanWeb.Controllers
                 var regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
                 var match = regex.Match(user.Email);
                 if (!match.Success)
+                {
                     validationMessage.Add("Invalid email format.");
-                validationId.Add("Email");
+                    validationId.Add("Email");
+                }
             }
 
             if (isCreating && !string.IsNullOrEmpty(user.Password))
@@ -232,8 +254,10 @@ namespace FinPlanWeb.Controllers
                 var regex = new Regex(@"^.*(?=.{6,})(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$");
                 var match = regex.Match(user.Password);
                 if (!match.Success)
+                {
                     validationMessage.Add("Invalid Password. Password must contain at least a digit, a uppercase and a lowercase letter. Mininum 6 characters are required. ");
                     validationId.Add("Password");
+                }
             }
 
             invalidIds = validationId;

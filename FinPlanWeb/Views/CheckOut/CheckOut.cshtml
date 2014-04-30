@@ -294,6 +294,7 @@
         terms: ko.observable()
     }
 
+    
     vm.isTermConfirmed = ko.computed(function () {
         if (vm.terms()) {
             return true;
@@ -301,6 +302,7 @@
         return false;
     });
 
+    
     vm.submitPromotion = function () {
         var code = vm.checkout.PromotionCode();
         $.post('@Url.Action("GetPromotionInfo")', { id: code }, function (data) {

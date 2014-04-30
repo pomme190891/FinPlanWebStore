@@ -72,10 +72,8 @@
                                             <li class="cart-block"><b class="pull-right" data-bind="text: '£' + totalPrice()"></b>Total:</li>
                                             <li class="divider"></li>
                                             <li class="cart-block">
-                                                <button class="btn btn-default btn-sm" onclick="location='http://merkent.com/bootstrap/index.php?route=checkout/cart'" type="button">
-                                                    <li class="glyphicon glyphicon-shopping-cart"></li>
-                                                    View Cart</button>
-                                                <button class="btn btn-default btn-sm" onclick="location='https://merkent.com/bootstrap/index.php?route=checkout/checkout'" type="button"><li class="glyphicon glyphicon-check"></li>Checkout</button>
+                                                <a class="btn btn-default btn-sm" href="@Url.Action("ShoppingCartView","ShoppingCart")"><i class="glyphicon glyphicon-shopping-cart"></i>View Cart</a>
+                                                <a class="btn btn-default btn-sm" href="@Url.Action("Checkout","CheckOut")" type="button"><i class="glyphicon glyphicon-check"></i>Checkout</a>
                                             </li>
                                         </ul>
                                     </div>

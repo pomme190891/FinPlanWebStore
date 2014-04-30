@@ -9,7 +9,6 @@ namespace FinPlanWeb.Database
 {
     public class UserManagement
     {
-
         public class User
         {
             public int Id { get; set; }
@@ -26,9 +25,6 @@ namespace FinPlanWeb.Database
             public DateTime? ModifiedDate { get; set; }
             public bool IsDeleted { get; set; }
         }
-
-
-
 
 
         /// This part checks if the user with password is existing within the database 
@@ -60,12 +56,8 @@ namespace FinPlanWeb.Database
         /// <returns></returns>
         public static bool IsValid(string username, string password)
         {
-
-
             using (var connection = new SqlConnection(GetConnection()))
             {
-
-
                 const string sql = @"SELECT [Username] FROM [dbo].[users] WHERE [Username] = @u AND [Password] = @p";
                 const string sql2 = @"UPDATE Users SET LastLogin = GETDATE() WHERE [Username] = @u AND [Password] =@p";
                 const string sql3 = @"UPDATE [dbo].[users] SET iplog = @ip WHERE [Username] = @u AND [Password] =@p";
@@ -232,10 +224,36 @@ namespace FinPlanWeb.Database
         }
 
 
+        public static void UpdateUserPassword(int userId, string newPassword)
+        {
+            try
+            {
+                var con = new SqlConnection(GetConnection());
+                var cmd = new SqlCommand
+                {
+                    Connection = con,
+                    CommandType = CommandType.Text,
+                    CommandText =
+                        "Update [dbo].[users] SET Password = @NewPassword WHERE Id = @UserId"
+                };
+                cmd.Parameters.AddWithValue("@NewPassword", Helpers.SHA1.Encode(newPassword));
+                cmd.Parameters.AddWithValue("@UserId", userId);
+
+                if (con.State != ConnectionState.Closed) return;
+                con.Open();
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+            catch (SqlException ex)
+            {
+                var msg = "Update errors";
+                msg += ex.Message;
+                throw new Exception(msg);
+            }
+        }
 
         public static void AddUser(User user)
         {
-
             try
             {
                 var con = new SqlConnection(GetConnection());

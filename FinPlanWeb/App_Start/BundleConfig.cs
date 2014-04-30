@@ -1,5 +1,4 @@
-﻿using System.Web;
-using System.Web.Optimization;
+﻿using System.Web.Optimization;
 
 namespace FinPlanWeb
 {
@@ -30,8 +29,12 @@ namespace FinPlanWeb
 
             bundles.Add(new StyleBundle("~/Content/bootstrapcss").Include(
                         "~/Content/bootstrap.css",
-                        "~/Content/bootstrap.min.css",
                         "~/Content/bootstrap-theme.min.css"));
+
+            bundles.Add(new StyleBundle("~/Content/jqueryuicss").Include(
+
+                        "~/Content/themes/base/jquery.ui.all.css"
+                        ));
 
 
         }
