@@ -1,7 +1,20 @@
-﻿Need to do:
+﻿ko.mapping.fromJS
+This automatically creates observable properties for each of the properties on data. 
+Then, every time you receive new data from the server, you can update all the properties on viewModel in one step by calling the ko.mapping.fromJS function
 
-1.Login to redirect to back to shopping cart if session timed out/expired. [Done]
-2.Promotional Code [Done]
-3.Order Management
-4.Account Management
-5.
+DTO = Data Trasfer Object
+
+
+StringBuilder was used so that the string keeps on adding
+
+
+Product Management
+1. Add product to the database, remember each product along to 1 catergory and set deleted coloumn to 0
+2. Delete product by setting deleted column to 1
+
+Promotion Management
+1. Add promotion to the database set deleted coloumn to 0
+2. Delete promotion by setting deleted column to 1
+
+User Management
+1. When inactive is selected, button changes to 'reactive' button and update the database so that deleted column is set 0.
